@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas: #fafaf7;
+  --ink: #1a1814;
+  --secondary: #444441;
+  --muted: #888780;
+  --rule: #d3d1c7;
+  --surface: #ffffff;
+  --accent: #5b3a1c;
+}
+
+html, body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (min-width: 640px) {
+  html, body { font-size: 17px; }
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--canvas);
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* Reflection content styling */
+.reflection-content {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.reflection-content > *:first-child { margin-top: 0; }
+
+.reflection-content p {
+  margin-bottom: 1.25rem;
+}
+
+.reflection-content blockquote {
+  border-left: 2px solid var(--ink);
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--secondary);
+}
+
+/* Section labels in reflections — small caps style */
+.reflection-content strong:first-child,
+.section-label {
+  display: block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Inference marker — bold red callout */
+.inference-marker {
+  display: inline-block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #a82828;
+  background: #fbeaea;
+  border: 1px solid #e8b8b8;
+  padding: 0.2rem 0.6rem;
+  margin-right: 0.6rem;
+  vertical-align: 0.15em;
+  border-radius: 3px;
+}
+
+/* Confidence pills */
+.confidence-pill {
+  display: inline-block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 0.25rem 0.7rem;
+  border-radius: 3px;
+  margin-right: 0.6rem;
+  vertical-align: 0.1em;
+}
+.confidence-high { background: #e8f0e6; color: #2d5a2d; border: 1px solid #c0d8b8; }
+.confidence-medium { background: #f0e8d8; color: #6b5028; border: 1px solid #d8c498; }
+.confidence-low { background: #f0e0e0; color: #6b3838; border: 1px solid #d8b8b8; }
+
+/* Loading dots */
+@keyframes dot-pulse {
+  0%, 80%, 100% { opacity: 0.3; }
+  40% { opacity: 1; }
+}
+.dot-1 { animation: dot-pulse 1.4s infinite; }
+.dot-2 { animation: dot-pulse 1.4s infinite 0.2s; }
+.dot-3 { animation: dot-pulse 1.4s infinite 0.4s; }
+
+/* Mode toggle */
+.mode-toggle {
+  display: inline-flex;
+  border: 0.5px solid var(--ink);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.mode-toggle button {
+  padding: 0.625rem 1.125rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: transparent;
+  color: var(--ink);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.mode-toggle button.active {
+  background: var(--ink);
+  color: var(--canvas);
+}
+.mode-toggle button:hover:not(.active) {
+  background: rgba(26, 24, 20, 0.05);
+}
+
+/* Thinker card hover */
+.thinker-card {
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.thinker-card:hover {
+  border-color: var(--ink);
+  transform: translateY(-1px);
+}
+
+/* Tag chips */
+.tag-chip {
+  display: inline-block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  background: rgba(26, 24, 20, 0.05);
+  color: var(--secondary);
+  margin-right: 0.35rem;
+  margin-bottom: 0.35rem;
+}
