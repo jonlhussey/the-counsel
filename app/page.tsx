@@ -342,7 +342,7 @@ export default function HomePage() {
               rows={5}
               maxLength={2000}
               disabled={loading}
-              className="w-full px-4 py-4 bg-surface text-ink placeholder:text-muted/70 focus:outline-none resize-none font-serif text-lg leading-relaxed"
+              className="w-full px-4 py-4 bg-surface text-ink placeholder:text-muted/70 focus:outline-none resize-none font-sans text-lg leading-relaxed"
             />
           </div>
 
@@ -551,11 +551,11 @@ function CouncilDisplay({ result }: { result: CouncilResult }) {
       ))}
 
       {/* Synthesis */}
-      <article className="bg-ink text-canvas rounded p-6 sm:p-8">
+      <article className="bg-ink text-canvas rounded p-6 sm:p-8 synthesis-card">
         <p className="font-mono text-[0.65rem] tracking-wider uppercase text-canvas/60 mb-4">
           Synthesis
         </p>
-        <div className="reflection-content text-canvas text-base [&_strong]:text-canvas/70 [&_blockquote]:border-canvas/40 [&_blockquote]:text-canvas/80">
+        <div className="reflection-content">
           <FormattedReflection text={result.synthesis} />
         </div>
       </article>

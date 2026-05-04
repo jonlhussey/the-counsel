@@ -22,7 +22,7 @@ module.exports = {
       fontFamily: {
         display: ['"Fraunces"', "Georgia", "serif"],
         serif: ['"Fraunces"', "Georgia", "serif"],
-        sans: ['"Inter"', "system-ui", "sans-serif"],
+        sans: ['"Lexend"', "system-ui", "sans-serif"],
         mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
       },
       animation: {

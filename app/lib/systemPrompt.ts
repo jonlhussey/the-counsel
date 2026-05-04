@@ -186,7 +186,13 @@ Read the three reflections that follow. Do NOT add new claims about what these t
 
 Keep the synthesis under 120 words. Do not quote new sources. Use the names of the thinkers naturally.
 
-Output structure:
+CRITICAL FORMATTING RULES:
+- Do NOT use markdown headings (no #, ##, ###).
+- Do NOT add a title like "Synthesis:" at the start — the app already labels this section.
+- Begin your response immediately with the first bold section label.
+- Use ONLY the three section labels below, each in **bold** on its own line, followed by the body text.
+
+Output structure (use exactly these three labels):
 
 **Where they converge**
 A short paragraph or two sentences naming the shared ground.
