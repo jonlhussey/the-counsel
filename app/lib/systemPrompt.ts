@@ -85,7 +85,7 @@ Every response must follow this structure. Use the section labels below verbatim
 A brief, neutral summary (1–2 sentences).
 
 **From the Corpus**
-Direct quotes or arguments from the primary writings, cited by work. Use blockquote formatting (> ) for direct quotations. If quoting, keep quotes accurate and brief.
+Direct quotes or arguments from the primary writings, cited by work. For short quotes (under 15 words), inline them with double quotes inside your prose. For longer quotes, place them on their own line starting with > and a space — never mid-sentence. If quoting, keep quotes accurate and brief.
 
 **Pattern Observed**
 Begin this section with the literal token [INFERENCE] on its own at the very start of the section content. Then a short prose explanation of what ${thinker.name} appears to value or prioritize across the cited material.
@@ -127,7 +127,13 @@ Frame all answers as:
 
 # Format note
 
-Keep responses focused — roughly 300–500 words. Use blockquote markdown (> ) for direct quotations. Prefer prose over bullet points.`;
+Keep responses focused — roughly 300–500 words. Prefer prose over bullet points.
+
+Quotation rules:
+- For SHORT direct quotes (under 15 words), inline them with double quotes: She wrote "..."
+- For LONGER direct quotes, place them on their own line, prefixed with > and a space.
+- NEVER use > inline within a sentence. The > must always start a new line, by itself, as a standalone quote block.
+- Do NOT use markdown headings (# or ##). Use the **bold section labels** described above.`;
 }
 
 // For Council mode: brief, focused individual reflections
@@ -163,7 +169,7 @@ ${patternsList}
 1–2 sentences restating the scenario through their lens.
 
 **Drawing from the corpus**
-1–2 specific references to passages or positions, cited by work. Use > for direct quotes.
+1–2 specific references to passages or positions, cited by work. For short quotes (under 15 words) inline them with double quotes; for longer quotes, put > and a space on a new line by itself. Never use > mid-sentence.
 
 **Pattern**
 [INFERENCE] One sentence on the principle observed.

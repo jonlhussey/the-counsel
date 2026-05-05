@@ -43,6 +43,7 @@ export function ThinkerBrowser({
 
   return (
     <div className="bg-canvas border border-rule rounded animate-fade-in">
+      {/* Header */}
       <div className="border-b border-rule p-4 sm:p-5 flex items-center justify-between gap-4 flex-wrap">
         <div>
           <p className="font-mono text-xs tracking-wider uppercase text-muted mb-1">
@@ -54,19 +55,30 @@ export function ThinkerBrowser({
         </div>
         <div className="flex items-center gap-2">
           <div className="mode-toggle text-xs">
-            <button onClick={() => setView("list")} className={view === "list" ? "active" : ""}>
+            <button
+              onClick={() => setView("list")}
+              className={view === "list" ? "active" : ""}
+            >
               List
             </button>
-            <button onClick={() => setView("grid")} className={view === "grid" ? "active" : ""}>
+            <button
+              onClick={() => setView("grid")}
+              className={view === "grid" ? "active" : ""}
+            >
               Grid
             </button>
           </div>
-          <button onClick={onClose} className="text-sm text-muted hover:text-ink transition-colors px-2" aria-label="Close">
+          <button
+            onClick={onClose}
+            className="text-sm text-muted hover:text-ink transition-colors px-2"
+            aria-label="Close"
+          >
             ✕
           </button>
         </div>
       </div>
 
+      {/* Filters */}
       <div className="p-4 sm:p-5 border-b border-rule space-y-3">
         <input
           type="text"
@@ -102,9 +114,12 @@ export function ThinkerBrowser({
         </div>
       </div>
 
+      {/* Results */}
       <div className="max-h-[60vh] overflow-y-auto p-4 sm:p-5">
         {filtered.length === 0 ? (
-          <p className="text-center text-muted italic py-8">No thinkers match your search.</p>
+          <p className="text-center text-muted italic py-8">
+            No thinkers match your search.
+          </p>
         ) : view === "list" ? (
           <ListView grouped={grouped} onSelect={onSelect} />
         ) : (
@@ -140,7 +155,9 @@ function ListView({
                     {t.name}
                   </span>
                   <span className="font-mono text-xs text-muted">{t.era}</span>
-                  <span className="text-sm text-secondary truncate hidden sm:block">{t.framing}</span>
+                  <span className="text-sm text-secondary truncate hidden sm:block">
+                    {t.framing}
+                  </span>
                 </button>
               </li>
             ))}
@@ -169,9 +186,13 @@ function GridView({
           <p className="font-mono text-[0.65rem] tracking-wider uppercase text-muted mb-1.5">
             {t.tradition}
           </p>
-          <p className="font-display text-lg font-medium leading-tight mb-1 text-ink">{t.name}</p>
+          <p className="font-display text-lg font-medium leading-tight mb-1 text-ink">
+            {t.name}
+          </p>
           <p className="font-mono text-xs text-muted mb-2">{t.era}</p>
-          <p className="text-sm text-secondary leading-snug">{t.framing}</p>
+          <p className="text-sm text-secondary leading-snug">
+            {t.framing}
+          </p>
         </button>
       ))}
     </div>

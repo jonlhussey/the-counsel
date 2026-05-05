@@ -17,6 +17,8 @@ export const maxDuration = 60;
 const HAIKU = "claude-haiku-4-5-20251001";
 const SONNET = "claude-sonnet-4-6";
 
+// Use Sonnet for the suggestion step too — picking 3 thinkers requires
+// understanding scenario nuance. This is one cheap call.
 async function suggestThinkers(
   client: Anthropic,
   scenario: string
@@ -49,10 +51,12 @@ The three ids must come from the roster above. Aim for diverse perspectives — 
     .map((b) => (b as { type: "text"; text: string }).text)
     .join("");
 
+  // Extract JSON from possible code fences
   const cleaned = text.replace(/```json|```/g, "").trim();
   const parsed = JSON.parse(cleaned);
   const ids: string[] = parsed.thinker_ids;
 
+  // Validate all ids exist
   const valid = ids.filter((id) => getThinker(id));
   if (valid.length !== 3) {
     throw new Error(
@@ -123,6 +127,7 @@ export async function POST(req: NextRequest) {
     }
 
     const ip = getClientIp(req.headers);
+    // Council uses more compute per request — slightly tighter limit.
     const { ok, remaining } = checkRateLimit(ip, "council", 10);
     if (!ok) {
       return NextResponse.json(
@@ -149,12 +154,15 @@ export async function POST(req: NextRequest) {
 
     const client = new Anthropic({ apiKey });
 
+    // Step 1: pick 3 thinkers
     const thinkerIds = await suggestThinkers(client, scenario);
 
+    // Step 2: get reflections in parallel
     const reflections = await Promise.all(
       thinkerIds.map((id) => reflectAsThinker(client, id, scenario))
     );
 
+    // Step 3: synthesize
     const synthesis = await synthesize(
       client,
       reflections.map((r) => r.thinker),

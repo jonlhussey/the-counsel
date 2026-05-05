@@ -167,7 +167,12 @@ function renderInline(text: string): React.ReactNode {
       return <em key={i}>{part.slice(1, -1)}</em>;
     }
     // Strip leftover orphan markdown markers
-    const cleaned = part.replace(/\*+/g, "").replace(/`+/g, "");
+    const cleaned = part
+      .replace(/\*+/g, "")  // stray asterisks
+      .replace(/`+/g, "")   // stray backticks
+      .replace(/\s>\s/g, " ")  // mid-sentence quote markers like "demands: > "
+      .replace(/^>\s/, "")  // leading > if it slipped through
+      .replace(/\s>$/, ""); // trailing >
     return <span key={i}>{cleaned}</span>;
   });
 }

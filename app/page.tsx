@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, FormEvent } from "react";
 import { ThinkerBrowser } from "./components/ThinkerBrowser";
 import { FormattedReflection } from "./components/FormattedReflection";
+import { Logo } from "./components/Logo";
 import { getThinker } from "@/app/lib/thinkers";
 
 type Mode = "single" | "council";
@@ -223,11 +224,8 @@ export default function HomePage() {
     <main className="relative min-h-screen px-5 sm:px-8 py-12 sm:py-16 max-w-3xl mx-auto">
       {/* Header */}
       <header className="mb-12 sm:mb-16 animate-fade-in">
-        <div className="flex items-center gap-2.5 mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-ink"></span>
-          <span className="font-mono text-xs tracking-wider uppercase text-secondary">
-            The Counsel · Reflections from history's thinkers
-          </span>
+        <div className="mb-10">
+          <Logo onClick={startNew} />
         </div>
 
         <h1 className="font-display font-normal text-ink leading-[0.95] tracking-tight text-5xl sm:text-7xl md:text-[5.5rem] mb-6">
@@ -245,7 +243,7 @@ export default function HomePage() {
 
       {/* Mode toggle */}
       <section className="mb-8 animate-slide-up">
-        <p className="font-mono text-xs tracking-wider uppercase text-muted mb-3">
+        <p className="font-display text-sm tracking-[0.18em] uppercase text-secondary font-medium mb-4">
           Mode
         </p>
         <div className="mode-toggle">
@@ -272,7 +270,7 @@ export default function HomePage() {
       {/* Thinker selection (single mode only) */}
       {mode === "single" && (
         <section className="mb-8 animate-slide-up">
-          <p className="font-mono text-xs tracking-wider uppercase text-muted mb-3">
+          <p className="font-display text-sm tracking-[0.18em] uppercase text-secondary font-medium mb-4">
             Thinker
           </p>
           {selectedThinker && !showBrowser ? (
@@ -322,7 +320,7 @@ export default function HomePage() {
       {/* Scenario input */}
       <section className="mb-8">
         <form onSubmit={handleSubmit}>
-          <p className="font-mono text-xs tracking-wider uppercase text-muted mb-3">
+          <p className="font-display text-sm tracking-[0.18em] uppercase text-secondary font-medium mb-4">
             Your scenario
           </p>
           <div className="bg-surface border border-rule rounded overflow-hidden">
@@ -388,7 +386,7 @@ export default function HomePage() {
         <section className="mb-10 animate-slide-up">
           <div className="border-t border-b border-rule py-5">
             <div className="flex items-center justify-between mb-3">
-              <p className="font-mono text-xs tracking-wider uppercase text-muted">
+              <p className="font-display text-sm tracking-[0.18em] uppercase text-secondary font-medium">
                 Past reflections
               </p>
               {history.length > 0 && (
@@ -457,15 +455,24 @@ export default function HomePage() {
       {/* Result */}
       {result && (
         <section ref={responseRef} className="mb-12 animate-slide-up">
-          <div className="border-t border-rule pt-8 mb-6 flex items-center justify-between gap-4 flex-wrap">
-            <p className="font-mono text-xs tracking-wider uppercase text-muted">
-              {result.mode === "single"
-                ? `Reflection from ${result.thinkerName}`
-                : "The Counsel convenes"}
-            </p>
+          <div className="border-t border-rule pt-8 mb-8 flex items-start justify-between gap-4 flex-wrap">
+            {result.mode === "single" ? (
+              <div>
+                <p className="font-display text-sm tracking-[0.18em] uppercase text-muted font-medium mb-1.5">
+                  A reflection from
+                </p>
+                <p className="font-display text-3xl sm:text-4xl font-medium text-ink leading-tight">
+                  {result.thinkerName}
+                </p>
+              </div>
+            ) : (
+              <p className="font-display text-2xl sm:text-3xl font-medium text-ink leading-tight">
+                The Counsel convenes
+              </p>
+            )}
             <button
               onClick={startNew}
-              className="text-sm text-secondary hover:text-ink underline-offset-4 hover:underline"
+              className="text-sm text-secondary hover:text-ink underline-offset-4 hover:underline mt-2"
             >
               ← Start new
             </button>
@@ -539,20 +546,20 @@ function CouncilDisplay({ result }: { result: CouncilResult }) {
           className={`bg-surface border border-rule rounded p-6 sm:p-8 animate-stagger-${i + 1}`}
         >
           <div className="mb-5 pb-4 border-b border-rule">
-            <p className="font-mono text-[0.65rem] tracking-wider uppercase text-muted mb-1">
+            <p className="font-display text-xs tracking-[0.18em] uppercase text-muted font-medium mb-1.5">
               Voice {i + 1} of 3
             </p>
-            <p className="font-display text-2xl font-medium text-ink">{r.thinker}</p>
+            <p className="font-display text-2xl sm:text-3xl font-medium text-ink leading-tight">{r.thinker}</p>
           </div>
-          <div className="reflection-content text-base">
+          <div className="reflection-content">
             <FormattedReflection text={r.reflection} />
           </div>
         </article>
       ))}
 
       {/* Synthesis */}
-      <article className="bg-ink text-canvas rounded p-6 sm:p-8 synthesis-card">
-        <p className="font-mono text-[0.65rem] tracking-wider uppercase text-canvas/60 mb-4">
+      <article className="synthesis-card">
+        <p className="section-label-large">
           Synthesis
         </p>
         <div className="reflection-content">
