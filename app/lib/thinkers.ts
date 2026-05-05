@@ -24,6 +24,8 @@ export type Thinker = {
   era: string;
   tradition: Tradition;
   framing: string;
+  bio: string;
+  wikipedia: string;
   primary_corpus: string[];
   excluded: string[];
   key_patterns: string[];
@@ -43,6 +45,9 @@ export const THINKERS: Thinker[] = [
     tradition: "Ancient Mediterranean",
     framing:
       "Athenian philosopher who left no writings; known through Plato's early dialogues and Xenophon",
+    bio:
+      "Athenian philosopher who taught not by lecturing but by relentless questioning. He insisted that no one knowingly does wrong and that the unexamined life is not worth living. Tried and condemned for impiety and corrupting the youth, he chose execution over exile to honor the laws of his city.",
+    wikipedia: "Socrates",
     primary_corpus: [
       "Plato's early dialogues (Apology, Crito, Euthyphro)",
       "Xenophon's Memorabilia",
@@ -68,6 +73,9 @@ export const THINKERS: Thinker[] = [
     era: "428–348 BCE",
     tradition: "Ancient Mediterranean",
     framing: "Athenian philosopher and founder of the Academy",
+    bio:
+      "Athenian philosopher and student of Socrates who founded the Academy, the Western world's first institution of higher learning. His dialogues — featuring Socrates as a character — explore justice, beauty, knowledge, and the nature of reality. His vision of an eternal realm of forms underlying the visible world shaped two millennia of philosophy and theology.",
+    wikipedia: "Plato",
     primary_corpus: [
       "Republic",
       "Phaedo",
@@ -92,6 +100,9 @@ export const THINKERS: Thinker[] = [
     era: "384–322 BCE",
     tradition: "Ancient Mediterranean",
     framing: "Greek philosopher and naturalist, student of Plato",
+    bio:
+      "Greek philosopher, naturalist, and student of Plato who tutored Alexander the Great. He treated ethics as a practical science of human flourishing achieved through habituated virtue rather than abstract rules. His systematic writings on logic, biology, politics, and metaphysics shaped scholarship for over two thousand years.",
+    wikipedia: "Aristotle",
     primary_corpus: [
       "Nicomachean Ethics",
       "Politics",
@@ -114,6 +125,9 @@ export const THINKERS: Thinker[] = [
     era: "341–270 BCE",
     tradition: "Ancient Mediterranean",
     framing: "Greek philosopher founder of the Garden",
+    bio:
+      "Greek philosopher who founded a school called the Garden where women and slaves studied alongside free men. He taught that the highest good is pleasure, properly understood as freedom from physical pain and mental anxiety, achievable through simple living and close friendship. His ethics were widely caricatured in his own time and have been ever since.",
+    wikipedia: "Epicurus",
     primary_corpus: [
       "Letter to Menoeceus",
       "Letter to Herodotus",
@@ -138,6 +152,9 @@ export const THINKERS: Thinker[] = [
     tradition: "Ancient Mediterranean",
     framing:
       "Roman emperor and Stoic philosopher writing privately to himself",
+    bio:
+      "Roman emperor from 161 to 180 CE and the last of the so-called Five Good Emperors. While leading military campaigns on the empire's frontiers, he wrote private notes to himself in Greek that survived as the Meditations — a Stoic handbook for a man trying to remain just and rational under enormous pressure. He never intended these notes for publication.",
+    wikipedia: "Marcus_Aurelius",
     primary_corpus: ["Meditations"],
     excluded: ["Historia Augusta", "biographies", "later Stoic interpretation"],
     key_patterns: [
@@ -155,6 +172,9 @@ export const THINKERS: Thinker[] = [
     era: "4 BCE–65 CE",
     tradition: "Ancient Mediterranean",
     framing: "Roman Stoic philosopher, statesman, and tragedian",
+    bio:
+      "Roman Stoic philosopher, statesman, and tragedian who served as advisor and tutor to the emperor Nero. His letters and essays offer practical Stoic counsel on time, anger, grief, and the proper use of wealth. Forced to commit suicide by Nero on suspicion of conspiracy, he died as he had lived — composing final words for his friends.",
+    wikipedia: "Seneca_the_Younger",
     primary_corpus: [
       "Letters from a Stoic (Epistulae Morales)",
       "On the Shortness of Life",
@@ -177,6 +197,9 @@ export const THINKERS: Thinker[] = [
     era: "50–135 CE",
     tradition: "Ancient Mediterranean",
     framing: "Greek Stoic philosopher, born a slave",
+    bio:
+      "Greek Stoic philosopher who was born a slave in Phrygia and later freed. He taught that human freedom lies entirely in distinguishing what we control from what we do not, and accepting the latter without resentment. His teachings were preserved by his student Arrian and have remained in continuous use for nearly two thousand years.",
+    wikipedia: "Epictetus",
     primary_corpus: ["Discourses (recorded by Arrian)", "Enchiridion"],
     excluded: ["modern self-help reframings of Stoicism"],
     key_patterns: [
@@ -194,6 +217,9 @@ export const THINKERS: Thinker[] = [
     era: "106–43 BCE",
     tradition: "Ancient Mediterranean",
     framing: "Roman statesman, orator, and philosopher",
+    bio:
+      "Roman statesman, lawyer, and orator who served as consul and resisted the rise of Julius Caesar. His philosophical works adapted Greek thought for Roman audiences and gave the Latin language much of its philosophical vocabulary. He was killed by agents of Mark Antony for his political opposition; his head and hands were displayed in the Forum.",
+    wikipedia: "Cicero",
     primary_corpus: [
       "On Duties (De Officiis)",
       "On Friendship",
@@ -216,6 +242,9 @@ export const THINKERS: Thinker[] = [
     era: "354–430 CE",
     tradition: "Ancient Mediterranean",
     framing: "North African bishop and theologian",
+    bio:
+      "North African bishop, theologian, and one of the most influential Christian writers in history. His Confessions invented the Western literary form of spiritual autobiography, examining his own restless heart with unprecedented honesty. His City of God offered a Christian theology of history that shaped medieval European thought for a thousand years.",
+    wikipedia: "Augustine_of_Hippo",
     primary_corpus: ["Confessions", "City of God", "On Christian Doctrine"],
     excluded: ["later Augustinian theology", "doctrinal extrapolations"],
     key_patterns: [
@@ -236,6 +265,9 @@ export const THINKERS: Thinker[] = [
     tradition: "Abrahamic Religious",
     framing:
       "First-century Jewish moral teacher in Roman-occupied Judea, treated here as a historical figure",
+    bio:
+      "First-century Jewish moral teacher who lived in Roman-occupied Galilee and Judea. His public ministry of perhaps three years included parables, healings, and confrontations with religious authorities; he was executed by crucifixion on charges of sedition. The Counsel treats him as a historical figure and ethical teacher, drawing only from the four canonical Gospels.",
+    wikipedia: "Jesus",
     primary_corpus: [
       "Gospel of Matthew",
       "Gospel of Mark",
@@ -264,6 +296,9 @@ export const THINKERS: Thinker[] = [
     era: "1138–1204",
     tradition: "Abrahamic Religious",
     framing: "Sephardic Jewish philosopher, physician, and Torah scholar",
+    bio:
+      "Sephardic Jewish philosopher, physician, and Torah scholar born in Córdoba and later settled in Egypt. His Mishneh Torah systematized Jewish law for ordinary readers; his Guide for the Perplexed reconciled Aristotelian philosophy with Jewish theology. He served as personal physician to the sultan's vizier while writing some of the most important works in medieval Jewish thought.",
+    wikipedia: "Maimonides",
     primary_corpus: [
       "Guide for the Perplexed",
       "Mishneh Torah",
@@ -286,6 +321,9 @@ export const THINKERS: Thinker[] = [
     tradition: "Abrahamic Religious",
     framing:
       "Prophet of Islam in 7th-century Arabia, treated here through directly attributed sayings and recorded actions",
+    bio:
+      "Founder of Islam and prophet of the Quran, born in Mecca around 570 CE. His teachings — preserved in the Quran and in collections of Hadith recording his sayings and actions — emphasize mercy, justice, moderation, and care for the vulnerable. The Counsel treats him here as a historical moral teacher, drawing from authenticated sources.",
+    wikipedia: "Muhammad",
     primary_corpus: [
       "Quran (passages of ethical teaching)",
       "Authenticated Hadith collections (Bukhari, Muslim)",
@@ -312,6 +350,9 @@ export const THINKERS: Thinker[] = [
     era: "1058–1111",
     tradition: "Abrahamic Religious",
     framing: "Persian Sunni theologian, philosopher, and Sufi mystic",
+    bio:
+      "Persian Sunni theologian, philosopher, and Sufi mystic who taught at the Nizamiyya of Baghdad before abandoning his career for a life of contemplation. His Revival of the Religious Sciences became one of the most widely read works in the Muslim world. He criticized purely rational philosophy while integrating its methods into a religion of the heart.",
+    wikipedia: "Al-Ghazali",
     primary_corpus: [
       "The Revival of the Religious Sciences",
       "The Deliverance from Error",
@@ -333,6 +374,9 @@ export const THINKERS: Thinker[] = [
     era: "1207–1273",
     tradition: "Abrahamic Religious",
     framing: "Persian Sufi mystic and poet",
+    bio:
+      "Persian Sufi mystic and poet who taught in 13th-century Konya, in what is now Turkey. His vast body of mystical poetry — particularly the Masnavi — explores divine love, the soul's longing, and the paradoxes of spiritual life. He remains one of the most widely read poets in the world and is claimed by readers of many traditions.",
+    wikipedia: "Rumi",
     primary_corpus: [
       "Masnavi",
       "Divan-e Shams-e Tabrizi",
@@ -354,6 +398,9 @@ export const THINKERS: Thinker[] = [
     era: "1225–1274",
     tradition: "Abrahamic Religious",
     framing: "Italian Dominican theologian and philosopher",
+    bio:
+      "Italian Dominican friar and theologian whose Summa Theologica attempted a complete synthesis of Aristotelian philosophy and Christian doctrine. He argued that faith and reason are complementary paths to truth and that natural law is accessible to any rational person. His thought became the official intellectual framework of the Catholic Church.",
+    wikipedia: "Thomas_Aquinas",
     primary_corpus: ["Summa Theologica", "Summa Contra Gentiles"],
     excluded: ["modern Thomist political applications"],
     key_patterns: [
@@ -371,6 +418,9 @@ export const THINKERS: Thinker[] = [
     era: "1260–1328",
     tradition: "Abrahamic Religious",
     framing: "German Dominican mystic and theologian",
+    bio:
+      "German Dominican mystic and theologian whose sermons explore the soul's union with God in the language of paradox and detachment. He preached in both Latin and German, helping to shape German philosophical vocabulary. Some of his teachings were condemned by the papacy after his death, though he was never formally declared a heretic in life.",
+    wikipedia: "Meister_Eckhart",
     primary_corpus: ["German Sermons", "Treatises", "Latin Works"],
     excluded: ["modern New Age reinterpretations"],
     key_patterns: [
@@ -388,6 +438,9 @@ export const THINKERS: Thinker[] = [
     era: "1483–1546",
     tradition: "Abrahamic Religious",
     framing: "German theologian, central to the Protestant Reformation",
+    bio:
+      "German theologian and Augustinian friar whose Ninety-Five Theses challenged Catholic indulgences and ignited the Protestant Reformation. He insisted on conscience bound to scripture above institutional authority and translated the Bible into accessible German. His later writings against Jews and rebellious peasants leave a darker, complicating legacy.",
+    wikipedia: "Martin_Luther",
     primary_corpus: [
       "Ninety-Five Theses",
       "On Christian Liberty",
@@ -413,6 +466,9 @@ export const THINKERS: Thinker[] = [
     era: "1515–1582",
     tradition: "Abrahamic Religious",
     framing: "Spanish Carmelite nun, mystic, and reformer",
+    bio:
+      "Spanish Carmelite nun, mystic, and reformer who founded the Discalced Carmelite order in the face of substantial institutional resistance. Her spiritual writings — particularly the Interior Castle — combine ecstatic mysticism with practical, even earthy, advice for daily life. She was the first woman declared a Doctor of the Catholic Church.",
+    wikipedia: "Teresa_of_%C3%81vila",
     primary_corpus: [
       "The Interior Castle",
       "The Way of Perfection",
@@ -434,6 +490,9 @@ export const THINKERS: Thinker[] = [
     era: "1813–1855",
     tradition: "Abrahamic Religious",
     framing: "Danish philosopher and Christian existentialist",
+    bio:
+      "Danish philosopher widely regarded as the first existentialist thinker. He published much of his work under pseudonyms representing different worldviews, exploring anxiety, despair, freedom, and what it means to live authentically before God. He was a pointed critic of the comfortable Christianity of his own Danish state church.",
+    wikipedia: "S%C3%B8ren_Kierkegaard",
     primary_corpus: [
       "Fear and Trembling",
       "Either/Or",
@@ -456,6 +515,9 @@ export const THINKERS: Thinker[] = [
     era: "1098–1179",
     tradition: "Abrahamic Religious",
     framing: "German Benedictine abbess, mystic, composer, and naturalist",
+    bio:
+      "German Benedictine abbess, mystic, composer, and naturalist active across most of the 12th century. She wrote theological visions, medical treatises, plays, and some of the most striking liturgical music to survive from her era. She corresponded with popes, emperors, and abbots, and was canonized as a saint and Doctor of the Church in 2012.",
+    wikipedia: "Hildegard_of_Bingen",
     primary_corpus: ["Scivias", "Liber Vitae Meritorum", "Letters", "Physica"],
     excluded: ["later interpretations of her visions"],
     key_patterns: [
@@ -476,6 +538,9 @@ export const THINKERS: Thinker[] = [
     tradition: "South Asian",
     framing:
       "Founder of Buddhism, treated through earliest Pali Canon teachings",
+    bio:
+      "Founder of Buddhism, born Siddhartha Gautama into a noble family in what is now Nepal around the 5th or 6th century BCE. After leaving his palace and seeking enlightenment through extreme asceticism, he found his middle way and spent forty-five years teaching across the Ganges plain. The Counsel draws from the earliest Pali Canon teachings attributed to him.",
+    wikipedia: "Gautama_Buddha",
     primary_corpus: [
       "Pali Canon (Sutta Pitaka, especially Dhammapada)",
       "Majjhima Nikaya",
@@ -502,6 +567,9 @@ export const THINKERS: Thinker[] = [
     era: "c. 150–250 CE",
     tradition: "South Asian",
     framing: "Indian Mahayana Buddhist philosopher",
+    bio:
+      "Indian Mahayana Buddhist philosopher who founded the Madhyamaka (Middle Way) school. His Fundamental Verses on the Middle Way developed the concept of emptiness — the claim that nothing exists with inherent, independent nature — using rigorous dialectical argument. His thought reshaped Buddhist philosophy across India, Tibet, China, and Japan.",
+    wikipedia: "Nagarjuna",
     primary_corpus: [
       "Mūlamadhyamakakārikā (Fundamental Verses on the Middle Way)",
     ],
@@ -521,6 +589,9 @@ export const THINKERS: Thinker[] = [
     era: "c. 700–750 CE",
     tradition: "South Asian",
     framing: "Indian Advaita Vedanta philosopher",
+    bio:
+      "Indian philosopher and teacher who consolidated the Advaita Vedanta school of Hindu thought. He argued that Atman (the self) and Brahman (ultimate reality) are non-dual — fundamentally one — and that liberation comes through clear knowledge of this truth. He traveled across the subcontinent debating, writing commentaries, and founding monasteries in his short life.",
+    wikipedia: "Adi_Shankara",
     primary_corpus: [
       "Brahma Sutra Bhashya",
       "Upadesasahasri",
@@ -542,6 +613,9 @@ export const THINKERS: Thinker[] = [
     era: "c. 1440–1518",
     tradition: "South Asian",
     framing: "North Indian mystic poet, weaver by trade",
+    bio:
+      "North Indian mystic poet and weaver whose verses scorned both Hindu and Muslim religious establishments while drawing freely from each. He spoke in plain Hindi about a divine reality found in honest work and direct experience, not in rituals or pilgrimages. His poems are sung today across South Asia and are claimed by Hindus, Muslims, and Sikhs alike.",
+    wikipedia: "Kabir",
     primary_corpus: [
       "Bijak",
       "Adi Granth (Kabir's verses)",
@@ -563,6 +637,9 @@ export const THINKERS: Thinker[] = [
     era: "1469–1539",
     tradition: "South Asian",
     framing: "Founder of Sikhism in Punjab",
+    bio:
+      "Founder of Sikhism in 15th- and 16th-century Punjab. He taught that there is one divine reality beyond names and forms, that all human beings are equal regardless of caste or gender, and that honest labor and sharing with others are forms of worship. His hymns form the foundational layer of the Guru Granth Sahib.",
+    wikipedia: "Guru_Nanak",
     primary_corpus: [
       "Guru Granth Sahib (Nanak's hymns, especially Japji Sahib, Asa di Var)",
     ],
@@ -583,6 +660,9 @@ export const THINKERS: Thinker[] = [
     era: "1869–1948",
     tradition: "South Asian",
     framing: "Indian independence leader and ethical theorist",
+    bio:
+      "Indian independence leader who developed satyagraha — truth-force or nonviolent resistance — as both a spiritual practice and a political method. He led India to independence from British rule through decades of strikes, marches, and fasts, and was assassinated in 1948 by a Hindu nationalist who opposed his commitment to Hindu-Muslim unity. His views on caste are now contested, particularly by Dalit thinkers like Ambedkar.",
+    wikipedia: "Mahatma_Gandhi",
     primary_corpus: [
       "An Autobiography: The Story of My Experiments with Truth",
       "Hind Swaraj",
@@ -604,6 +684,9 @@ export const THINKERS: Thinker[] = [
     era: "1861–1941",
     tradition: "South Asian",
     framing: "Bengali poet, polymath, and Nobel laureate",
+    bio:
+      "Bengali poet, novelist, painter, composer, and educator who became the first non-European to win the Nobel Prize in Literature in 1913. He composed the national anthems of both India and Bangladesh and founded a university aimed at fusing Indian and Western traditions. He was an early and persistent critic of nationalism in all its forms.",
+    wikipedia: "Rabindranath_Tagore",
     primary_corpus: [
       "Gitanjali",
       "Sadhana: The Realisation of Life",
@@ -627,6 +710,9 @@ export const THINKERS: Thinker[] = [
     tradition: "South Asian",
     framing:
       "Indian jurist, economist, social reformer, and architect of India's constitution",
+    bio:
+      "Indian jurist, economist, social reformer, and the principal architect of India's constitution. Born into a Dalit family and subjected to caste discrimination throughout his life, he produced the most rigorous moral and political case against caste hierarchy ever written. He converted to Buddhism with hundreds of thousands of followers shortly before his death in 1956.",
+    wikipedia: "B._R._Ambedkar",
     primary_corpus: [
       "Annihilation of Caste",
       "The Buddha and His Dhamma",
@@ -650,6 +736,9 @@ export const THINKERS: Thinker[] = [
     era: "551–479 BCE",
     tradition: "East Asian",
     framing: "Chinese teacher and political thinker, late Spring and Autumn period",
+    bio:
+      "Chinese teacher and political thinker active during the late Spring and Autumn period, an era of breakdown in Chinese feudal order. He taught that society is held together by ren (humaneness) cultivated through ritual propriety, family bonds, and moral example by leaders. The Analects, recorded by his students, became one of the most influential books in human history.",
+    wikipedia: "Confucius",
     primary_corpus: ["Analects (Lunyu)"],
     excluded: ["later Confucian commentaries (Han, Song)", "Neo-Confucian metaphysics"],
     key_patterns: [
@@ -669,6 +758,9 @@ export const THINKERS: Thinker[] = [
     era: "c. 6th century BCE (traditional)",
     tradition: "East Asian",
     framing: "Legendary Chinese sage credited with the foundational Daoist text",
+    bio:
+      "Legendary Chinese sage credited with the foundational Daoist text the Daodejing. Whether he was a single historical figure remains debated, but the text attributed to him has shaped Chinese thought, art, and politics for over two millennia. Its central teaching — wu wei, action in accord with the natural way — offers a counterpoint to Confucian effort.",
+    wikipedia: "Laozi",
     primary_corpus: ["Daodejing (Tao Te Ching)"],
     excluded: ["religious Daoism", "later Daoist alchemical texts"],
     key_patterns: [
@@ -687,6 +779,9 @@ export const THINKERS: Thinker[] = [
     era: "372–289 BCE",
     tradition: "East Asian",
     framing: "Chinese Confucian philosopher",
+    bio:
+      "Chinese Confucian philosopher who lived a generation after Confucius and developed his teaching into a fuller philosophical system. He argued that human nature is fundamentally good, with innate moral seeds that need only proper cultivation to flourish. He held rulers to a strict moral standard, arguing that those who failed in their duty to the people forfeited their right to rule.",
+    wikipedia: "Mencius",
     primary_corpus: ["Mencius (Mengzi)"],
     excluded: ["later Confucian synthesis"],
     key_patterns: [
@@ -704,6 +799,9 @@ export const THINKERS: Thinker[] = [
     era: "c. 369–286 BCE",
     tradition: "East Asian",
     framing: "Chinese Daoist philosopher",
+    bio:
+      "Chinese Daoist philosopher whose namesake text combines philosophical argument with parable, dream, and joke. He used humor and paradox to dismantle fixed categories and rigid moral certainties, including those of the Confucians. His writing remains one of the most playful philosophical texts ever produced.",
+    wikipedia: "Zhuangzi",
     primary_corpus: ["Zhuangzi (the inner chapters especially)"],
     excluded: ["religious Daoism", "outer chapters as direct authorship"],
     key_patterns: [
@@ -721,6 +819,9 @@ export const THINKERS: Thinker[] = [
     era: "1200–1253",
     tradition: "East Asian",
     framing: "Japanese Zen Buddhist monk and founder of Sōtō Zen",
+    bio:
+      "Japanese Zen Buddhist monk who studied in China and returned to found the Sōtō Zen school in Japan. His Shobogenzo combines philosophical depth with poetic intensity, exploring the unity of practice and enlightenment through seated meditation. He insisted that ordinary daily activity, fully attended to, is itself the path.",
+    wikipedia: "D%C5%8Dgen",
     primary_corpus: ["Shobogenzo", "Fukanzazengi"],
     excluded: ["later Zen institutional developments"],
     key_patterns: [
@@ -738,6 +839,9 @@ export const THINKERS: Thinker[] = [
     era: "1472–1529",
     tradition: "East Asian",
     framing: "Chinese Neo-Confucian philosopher and statesman",
+    bio:
+      "Chinese Neo-Confucian philosopher and statesman who served as a successful military commander and provincial governor while developing a major school of thought. His central teaching — the unity of knowledge and action — argued that genuine moral knowledge necessarily expresses itself in practice. His emphasis on innate moral knowledge influenced thought across East Asia.",
+    wikipedia: "Wang_Yangming",
     primary_corpus: ["Instructions for Practical Living (Chuanxilu)"],
     excluded: ["later Wang school sectarian developments"],
     key_patterns: [
@@ -757,6 +861,9 @@ export const THINKERS: Thinker[] = [
     era: "980–1037",
     tradition: "Medieval & Early Modern Europe",
     framing: "Persian polymath, philosopher, and physician",
+    bio:
+      "Persian polymath of the Islamic Golden Age who wrote landmark works on philosophy, medicine, astronomy, and mathematics. His Canon of Medicine remained a standard medical textbook in Europe and the Islamic world for over six centuries. His philosophical proofs for the existence of a Necessary Being shaped both Islamic and Christian theology.",
+    wikipedia: "Avicenna",
     primary_corpus: [
       "The Book of Healing",
       "The Canon of Medicine",
@@ -778,6 +885,9 @@ export const THINKERS: Thinker[] = [
     era: "1126–1198",
     tradition: "Medieval & Early Modern Europe",
     framing: "Andalusian polymath, philosopher, jurist, and physician",
+    bio:
+      "Andalusian polymath who served as a court physician and judge in Almohad Spain. His commentaries on Aristotle were so authoritative in medieval Europe that he was known simply as the Commentator. He defended philosophy against Al-Ghazali's critique and argued that revelation and reason, properly understood, cannot conflict.",
+    wikipedia: "Averroes",
     primary_corpus: [
       "The Decisive Treatise",
       "The Incoherence of the Incoherence",
@@ -799,6 +909,9 @@ export const THINKERS: Thinker[] = [
     era: "1469–1527",
     tradition: "Medieval & Early Modern Europe",
     framing: "Florentine diplomat and political theorist",
+    bio:
+      "Florentine diplomat and political theorist who served the Florentine Republic for fourteen years before being tortured and exiled when the Medici returned to power. His Prince — written during exile in hopes of regaining favor — examined how power actually works rather than how moralists wished it would. His Discourses on Livy reveal a deeply republican thinker beneath the cynical reputation.",
+    wikipedia: "Niccol%C3%B2_Machiavelli",
     primary_corpus: ["The Prince", "Discourses on Livy", "Letters"],
     excluded: [
       "the popular caricature of 'Machiavellian' as merely cynical",
@@ -819,6 +932,9 @@ export const THINKERS: Thinker[] = [
     era: "1533–1592",
     tradition: "Medieval & Early Modern Europe",
     framing: "French Renaissance essayist and skeptic",
+    bio:
+      "French Renaissance writer who invented the essay as a literary form. After retiring from public life at thirty-eight, he spent the rest of his days writing — and constantly revising — a single book that examined his own thoughts, habits, contradictions, and limitations. His method of patient self-examination shaped modern philosophy and prose alike.",
+    wikipedia: "Michel_de_Montaigne",
     primary_corpus: ["Essays (Essais)"],
     excluded: ["modern self-help reductions of his thought"],
     key_patterns: [
@@ -836,6 +952,9 @@ export const THINKERS: Thinker[] = [
     era: "1596–1650",
     tradition: "Medieval & Early Modern Europe",
     framing: "French philosopher and mathematician",
+    bio:
+      "French philosopher and mathematician who attempted to rebuild human knowledge from scratch using systematic doubt. His Meditations on First Philosophy famously concluded that even radical skepticism could not doubt the existence of the doubting mind itself. He also invented analytic geometry and made foundational contributions to modern science.",
+    wikipedia: "Ren%C3%A9_Descartes",
     primary_corpus: [
       "Meditations on First Philosophy",
       "Discourse on the Method",
@@ -857,6 +976,9 @@ export const THINKERS: Thinker[] = [
     era: "1632–1677",
     tradition: "Medieval & Early Modern Europe",
     framing: "Dutch-Jewish philosopher",
+    bio:
+      "Dutch-Jewish philosopher who was excommunicated from his Amsterdam Sephardic community at twenty-three for his unorthodox views. He earned his living as a lens grinder while developing one of the most rigorous and unconventional philosophical systems in history. His Ethics treats God and nature as one, and freedom as the understanding of necessity.",
+    wikipedia: "Baruch_Spinoza",
     primary_corpus: ["Ethics", "Theological-Political Treatise"],
     excluded: ["pantheist appropriations stripped of his rigor"],
     key_patterns: [
@@ -874,6 +996,9 @@ export const THINKERS: Thinker[] = [
     era: "1632–1704",
     tradition: "Medieval & Early Modern Europe",
     framing: "English Enlightenment philosopher",
+    bio:
+      "English philosopher whose work shaped the political theory of the Enlightenment and the American founding. He argued that legitimate government rests on the consent of the governed and exists to protect natural rights to life, liberty, and property. His epistemology held that all knowledge derives from experience rather than innate ideas.",
+    wikipedia: "John_Locke",
     primary_corpus: [
       "Two Treatises of Government",
       "Essay Concerning Human Understanding",
@@ -895,6 +1020,9 @@ export const THINKERS: Thinker[] = [
     era: "1711–1776",
     tradition: "Medieval & Early Modern Europe",
     framing: "Scottish Enlightenment philosopher and historian",
+    bio:
+      "Scottish Enlightenment philosopher and historian whose moderate skepticism reshaped Western philosophy. He argued that reason is, and should be, the slave of the passions, that moral judgment rests on sentiment, and that one cannot derive an ought from an is. His good humor and clarity made even his most radical conclusions feel companionable.",
+    wikipedia: "David_Hume",
     primary_corpus: [
       "A Treatise of Human Nature",
       "Enquiries",
@@ -916,6 +1044,9 @@ export const THINKERS: Thinker[] = [
     era: "1724–1804",
     tradition: "Medieval & Early Modern Europe",
     framing: "Prussian philosopher of the Enlightenment",
+    bio:
+      "Prussian philosopher whose Critique of Pure Reason attempted to map the limits and capacities of human understanding. His ethical theory — centered on the categorical imperative and the unconditional dignity of persons — remains one of the most influential in moral philosophy. He famously took the same daily walk through Königsberg with such precision that neighbors set their watches by him.",
+    wikipedia: "Immanuel_Kant",
     primary_corpus: [
       "Groundwork of the Metaphysics of Morals",
       "Critique of Pure Reason",
@@ -938,6 +1069,9 @@ export const THINKERS: Thinker[] = [
     era: "1712–1778",
     tradition: "Medieval & Early Modern Europe",
     framing: "Genevan philosopher of the Enlightenment",
+    bio:
+      "Genevan philosopher, novelist, and composer whose work helped ignite both the French Revolution and the Romantic movement. He argued that civilization had corrupted humans who were naturally good, that legitimate political authority comes from the general will, and that education should follow nature. His Confessions was one of the first great works of psychological autobiography.",
+    wikipedia: "Jean-Jacques_Rousseau",
     primary_corpus: [
       "The Social Contract",
       "Discourse on Inequality",
@@ -963,6 +1097,9 @@ export const THINKERS: Thinker[] = [
     era: "1759–1797",
     tradition: "Medieval & Early Modern Europe",
     framing: "English Enlightenment philosopher and early feminist",
+    bio:
+      "English Enlightenment philosopher whose Vindication of the Rights of Woman is a foundational text of modern feminism. She argued that women's apparent intellectual inferiority was the result of their education being deliberately stunted, and that genuine moral virtue requires the same reason and education in women as in men. She died eleven days after giving birth to her daughter Mary, who would write Frankenstein.",
+    wikipedia: "Mary_Wollstonecraft",
     primary_corpus: [
       "A Vindication of the Rights of Woman",
       "A Vindication of the Rights of Men",
@@ -984,6 +1121,9 @@ export const THINKERS: Thinker[] = [
     era: "1723–1790",
     tradition: "Medieval & Early Modern Europe",
     framing: "Scottish moral philosopher and economist",
+    bio:
+      "Scottish moral philosopher who is now best known as the founder of modern economics, though he considered himself first a philosopher of human nature. His Theory of Moral Sentiments argued that sympathy — our capacity to feel with others — is the foundation of moral judgment. His Wealth of Nations should be read alongside it, not apart from it.",
+    wikipedia: "Adam_Smith",
     primary_corpus: [
       "The Theory of Moral Sentiments",
       "An Inquiry into the Nature and Causes of the Wealth of Nations",
@@ -1008,6 +1148,9 @@ export const THINKERS: Thinker[] = [
     era: "1770–1831",
     tradition: "Modern Western Philosophy",
     framing: "German idealist philosopher",
+    bio:
+      "German idealist philosopher whose work treats history, thought, and reality as the unfolding of Spirit toward greater self-consciousness and freedom. His dialectical method — in which contradictions drive development — shaped almost every later philosophical movement, from Marxism to existentialism to American pragmatism. He is famously difficult to read; his admirers say the difficulty is essential.",
+    wikipedia: "Georg_Wilhelm_Friedrich_Hegel",
     primary_corpus: [
       "Phenomenology of Spirit",
       "Philosophy of Right",
@@ -1029,6 +1172,9 @@ export const THINKERS: Thinker[] = [
     era: "1788–1860",
     tradition: "Modern Western Philosophy",
     framing: "German pessimist philosopher",
+    bio:
+      "German philosopher who argued that the world is fundamentally an expression of blind, striving Will, and that this Will is the source of unending human suffering. Compassion — recognizing the same Will in others — is the foundation of his ethics; art and contemplation offer temporary relief. His pessimism deeply influenced Nietzsche, Wagner, Freud, and countless writers.",
+    wikipedia: "Arthur_Schopenhauer",
     primary_corpus: [
       "The World as Will and Representation",
       "Parerga and Paralipomena",
@@ -1049,6 +1195,9 @@ export const THINKERS: Thinker[] = [
     era: "1806–1873",
     tradition: "Modern Western Philosophy",
     framing: "English philosopher, economist, and reformer",
+    bio:
+      "English philosopher, economist, and parliamentarian who refined utilitarianism and made the most lasting case for individual liberty. His harm principle — that the only justification for restricting someone's liberty is to prevent harm to others — remains central to liberal political thought. His Subjection of Women, written with his wife Harriet Taylor Mill, was a landmark feminist text.",
+    wikipedia: "John_Stuart_Mill",
     primary_corpus: [
       "On Liberty",
       "Utilitarianism",
@@ -1071,6 +1220,9 @@ export const THINKERS: Thinker[] = [
     era: "1818–1883",
     tradition: "Modern Western Philosophy",
     framing: "German philosopher, economist, and revolutionary theorist",
+    bio:
+      "German philosopher, economist, and revolutionary whose analysis of capitalism remains influential whether or not one accepts his political program. He argued that human history is shaped by material conditions and class struggle, and that wage labor under capitalism alienates workers from their own activity. His writings were later used to justify regimes he never lived to see and would not have endorsed in their actual form.",
+    wikipedia: "Karl_Marx",
     primary_corpus: [
       "Capital, Volume I",
       "Economic and Philosophic Manuscripts of 1844",
@@ -1096,6 +1248,9 @@ export const THINKERS: Thinker[] = [
     era: "1844–1900",
     tradition: "Modern Western Philosophy",
     framing: "German philosopher and cultural critic",
+    bio:
+      "German philosopher and cultural critic who attacked Christian morality, romantic nationalism, and the comfortable certainties of his age. He argued for radical self-creation, love of fate, and suspicion of moralities that disguise resentment. After his death, his sister edited his unfinished notes into a Nazi-friendly compilation that distorted views he himself had explicitly opposed.",
+    wikipedia: "Friedrich_Nietzsche",
     primary_corpus: [
       "Thus Spoke Zarathustra",
       "Beyond Good and Evil",
@@ -1122,6 +1277,9 @@ export const THINKERS: Thinker[] = [
     era: "1842–1910",
     tradition: "Modern Western Philosophy",
     framing: "American philosopher and psychologist, founder of pragmatism",
+    bio:
+      "American philosopher and psychologist who founded pragmatism alongside Charles Peirce and helped invent modern psychology as a scientific discipline. He argued that ideas should be evaluated by their practical consequences and that genuine religious experience deserves serious philosophical attention. His brother was the novelist Henry James.",
+    wikipedia: "William_James",
     primary_corpus: [
       "The Varieties of Religious Experience",
       "Pragmatism",
@@ -1144,6 +1302,9 @@ export const THINKERS: Thinker[] = [
     era: "1889–1951",
     tradition: "Modern Western Philosophy",
     framing: "Austrian-British philosopher",
+    bio:
+      "Austrian-British philosopher whose work fundamentally reshaped 20th-century philosophy of language. His early Tractatus argued that the limits of language are the limits of one's world; his later Philosophical Investigations rejected much of the Tractatus and treated meaning as use within a form of life. He gave away an enormous family fortune and lived austerely in Cambridge, Norway, and Ireland.",
+    wikipedia: "Ludwig_Wittgenstein",
     primary_corpus: [
       "Tractatus Logico-Philosophicus",
       "Philosophical Investigations",
@@ -1166,6 +1327,9 @@ export const THINKERS: Thinker[] = [
     tradition: "Modern Western Philosophy",
     framing:
       "German philosopher (note: a Nazi party member; treat his philosophical writings without endorsing his political record)",
+    bio:
+      "German philosopher whose Being and Time recast philosophy around the question of what it means to exist as a finite, mortal being. He joined the Nazi Party in 1933 and accepted a rectorship under the regime — a record he never adequately reckoned with afterward. His philosophical influence on phenomenology, existentialism, and theology remains vast and uncomfortable.",
+    wikipedia: "Martin_Heidegger",
     primary_corpus: [
       "Being and Time",
       "The Question Concerning Technology",
@@ -1187,6 +1351,9 @@ export const THINKERS: Thinker[] = [
     era: "1905–1980",
     tradition: "Modern Western Philosophy",
     framing: "French existentialist philosopher and writer",
+    bio:
+      "French existentialist philosopher, novelist, playwright, and political activist whose lifelong partner was Simone de Beauvoir. He argued that humans are radically free, that this freedom is the source of our anguish, and that we are responsible for the selves we make. He declined the 1964 Nobel Prize in Literature, refusing to be turned into an institution.",
+    wikipedia: "Jean-Paul_Sartre",
     primary_corpus: [
       "Being and Nothingness",
       "Existentialism Is a Humanism",
@@ -1209,6 +1376,9 @@ export const THINKERS: Thinker[] = [
     era: "1908–1986",
     tradition: "Modern Western Philosophy",
     framing: "French existentialist philosopher and feminist",
+    bio:
+      "French existentialist philosopher and feminist whose Second Sex is foundational to modern feminist thought. Her famous claim that one is not born, but becomes, a woman opened up gender as a lifelong process of social construction. Her Ethics of Ambiguity offers her own distinct existentialist ethics, separate from and arguably deeper than Sartre's.",
+    wikipedia: "Simone_de_Beauvoir",
     primary_corpus: [
       "The Second Sex",
       "The Ethics of Ambiguity",
@@ -1230,6 +1400,9 @@ export const THINKERS: Thinker[] = [
     era: "1913–1960",
     tradition: "Modern Western Philosophy",
     framing: "French-Algerian writer and philosopher",
+    bio:
+      "French-Algerian writer and philosopher who explored what he called the absurd — the gap between our hunger for meaning and the silence of the universe. He resisted both nihilism and false consolation, arguing for rebellion as solidarity with other humans facing the same condition. He won the Nobel Prize in Literature in 1957 and died in a car accident at forty-six.",
+    wikipedia: "Albert_Camus",
     primary_corpus: [
       "The Myth of Sisyphus",
       "The Rebel",
@@ -1252,6 +1425,9 @@ export const THINKERS: Thinker[] = [
     era: "1906–1975",
     tradition: "Modern Western Philosophy",
     framing: "German-American political theorist",
+    bio:
+      "German-American political theorist who fled Nazi Germany and spent her career thinking about how totalitarianism became possible. Her coverage of the Eichmann trial coined the phrase the banality of evil, capturing her shocking insight that monstrous acts can come from thoughtless bureaucrats rather than monsters. Her Human Condition remains one of the great works of 20th-century political thought.",
+    wikipedia: "Hannah_Arendt",
     primary_corpus: [
       "The Origins of Totalitarianism",
       "The Human Condition",
@@ -1274,6 +1450,9 @@ export const THINKERS: Thinker[] = [
     era: "1909–1943",
     tradition: "Modern Western Philosophy",
     framing: "French philosopher, mystic, and political activist",
+    bio:
+      "French philosopher, mystic, and political activist who worked in factories and fought briefly in the Spanish Civil War to share working-class conditions. She wrote on attention, affliction, and obligation with an intensity that has drawn admirers across religious and secular traditions. She died at thirty-four in England, refusing to eat more than wartime rations available to French citizens under occupation.",
+    wikipedia: "Simone_Weil",
     primary_corpus: [
       "Gravity and Grace",
       "The Need for Roots",
@@ -1295,6 +1474,9 @@ export const THINKERS: Thinker[] = [
     era: "1919–1999",
     tradition: "Modern Western Philosophy",
     framing: "Irish-British philosopher and novelist",
+    bio:
+      "Irish-British philosopher and novelist who insisted that ethics is fundamentally about how we see other people. She argued that the ego is the chief obstacle to clear vision and that loving attention to reality — rather than abstract principles — is the core of moral life. She was also a prolific novelist whose books explore these themes in narrative form.",
+    wikipedia: "Iris_Murdoch",
     primary_corpus: [
       "The Sovereignty of Good",
       "Metaphysics as a Guide to Morals",
@@ -1316,6 +1498,9 @@ export const THINKERS: Thinker[] = [
     era: "1921–2002",
     tradition: "Modern Western Philosophy",
     framing: "American political philosopher",
+    bio:
+      "American political philosopher whose Theory of Justice revived political philosophy as a serious academic discipline in the late 20th century. His thought experiment of the veil of ignorance asks how we would design society if we did not know our own position in it. His framework shapes ongoing debates about justice, fairness, and liberalism.",
+    wikipedia: "John_Rawls",
     primary_corpus: ["A Theory of Justice", "Political Liberalism"],
     excluded: ["specific contemporary policy applications"],
     key_patterns: [
@@ -1333,6 +1518,9 @@ export const THINKERS: Thinker[] = [
     era: "1926–1984",
     tradition: "Modern Western Philosophy",
     framing: "French philosopher and historian of ideas",
+    bio:
+      "French philosopher and historian who studied how power works through institutions, knowledge, and the formation of the self. His genealogies of madness, punishment, and sexuality showed how seemingly natural categories are produced by historical practices. He is one of the most cited thinkers in the humanities and social sciences worldwide.",
+    wikipedia: "Michel_Foucault",
     primary_corpus: [
       "Discipline and Punish",
       "The History of Sexuality (Vol. 1)",
@@ -1356,6 +1544,9 @@ export const THINKERS: Thinker[] = [
     era: "1803–1882",
     tradition: "American Thought",
     framing: "American transcendentalist philosopher and essayist",
+    bio:
+      "American transcendentalist philosopher and essayist who became the central voice of New England intellectual life in the mid-19th century. His call for self-reliance — trust in one's own moral conscience over inherited authority — shaped American thought for generations. He was a generous mentor to younger writers including Henry David Thoreau.",
+    wikipedia: "Ralph_Waldo_Emerson",
     primary_corpus: ["Self-Reliance", "Nature", "The American Scholar", "Essays"],
     excluded: ["modern self-help appropriations stripped of context"],
     key_patterns: [
@@ -1373,6 +1564,9 @@ export const THINKERS: Thinker[] = [
     era: "1817–1862",
     tradition: "American Thought",
     framing: "American transcendentalist, naturalist, and reformer",
+    bio:
+      "American naturalist, philosopher, and reformer who spent two years living simply in a cabin on Walden Pond. His Civil Disobedience — written after a night in jail for refusing to pay taxes that supported slavery and the Mexican-American War — influenced Gandhi, King, and resistance movements worldwide. His journals contain over two million words of detailed observation of the natural world.",
+    wikipedia: "Henry_David_Thoreau",
     primary_corpus: [
       "Walden",
       "Civil Disobedience",
@@ -1396,6 +1590,9 @@ export const THINKERS: Thinker[] = [
     tradition: "American Thought",
     framing:
       "American abolitionist, orator, and writer, formerly enslaved",
+    bio:
+      "American abolitionist, orator, and writer who escaped from slavery in 1838 and became one of the most powerful voices for emancipation in the 19th century. His autobiographies remain landmarks of American literature; his speeches confronted his audiences with the gap between America's professed ideals and its actual practice. He served in several federal positions after the Civil War.",
+    wikipedia: "Frederick_Douglass",
     primary_corpus: [
       "Narrative of the Life of Frederick Douglass",
       "My Bondage and My Freedom",
@@ -1417,6 +1614,9 @@ export const THINKERS: Thinker[] = [
     era: "1868–1963",
     tradition: "American Thought",
     framing: "American sociologist, historian, and civil rights activist",
+    bio:
+      "American sociologist, historian, and civil rights activist who became the first African American to earn a doctorate from Harvard. His Souls of Black Folk introduced the concept of double consciousness — the experience of seeing oneself through the eyes of a hostile dominant culture. He helped found the NAACP and spent his final years living in Ghana.",
+    wikipedia: "W._E._B._Du_Bois",
     primary_corpus: [
       "The Souls of Black Folk",
       "Black Reconstruction in America",
@@ -1438,6 +1638,9 @@ export const THINKERS: Thinker[] = [
     era: "1859–1952",
     tradition: "American Thought",
     framing: "American philosopher, psychologist, and educational reformer",
+    bio:
+      "American philosopher, psychologist, and educational reformer whose pragmatist thought shaped 20th-century American intellectual life. He argued that democracy is not merely a form of government but a way of life requiring continuous inquiry and shared experience. His writings on education profoundly influenced progressive teaching practices around the world.",
+    wikipedia: "John_Dewey",
     primary_corpus: [
       "Democracy and Education",
       "Experience and Nature",
@@ -1460,6 +1663,9 @@ export const THINKERS: Thinker[] = [
     era: "1929–1968",
     tradition: "American Thought",
     framing: "American Baptist minister and civil rights leader",
+    bio:
+      "American Baptist minister and civil rights leader who led the movement for Black equality in the United States from the mid-1950s until his assassination in 1968. He combined the prophetic tradition of the Black church with Gandhian nonviolent direct action and a deep theological grounding. His Letter from Birmingham Jail remains one of the most important documents in American moral thought.",
+    wikipedia: "Martin_Luther_King_Jr.",
     primary_corpus: [
       "Letter from Birmingham Jail",
       "Stride Toward Freedom",
@@ -1482,6 +1688,9 @@ export const THINKERS: Thinker[] = [
     era: "1924–1987",
     tradition: "American Thought",
     framing: "American writer and social critic",
+    bio:
+      "American writer whose essays, novels, and public speeches confronted American racism with unmatched moral and rhetorical clarity. He spent significant portions of his adult life in France, finding in the distance both refuge and a sharper view of America. His Fire Next Time is a landmark of American letters; his essays remain widely read decades after his death.",
+    wikipedia: "James_Baldwin",
     primary_corpus: [
       "The Fire Next Time",
       "Notes of a Native Son",
@@ -1504,6 +1713,9 @@ export const THINKERS: Thinker[] = [
     era: "1934–1992",
     tradition: "American Thought",
     framing: "Black lesbian American poet, essayist, and theorist",
+    bio:
+      "Black lesbian American poet, essayist, and theorist who described herself as a Black, lesbian, mother, warrior, poet. Her essays and speeches — collected in Sister Outsider — addressed the intersections of race, gender, and sexuality with poetic force. Her Cancer Journals broke new ground in writing about illness, the body, and survival.",
+    wikipedia: "Audre_Lorde",
     primary_corpus: [
       "Sister Outsider",
       "The Cancer Journals",
@@ -1527,6 +1739,9 @@ export const THINKERS: Thinker[] = [
     era: "1809–1882",
     tradition: "Science & Empiricism",
     framing: "English naturalist",
+    bio:
+      "English naturalist whose theory of evolution by natural selection — developed over more than two decades after his Beagle voyage — fundamentally reshaped biology and humanity's view of itself. He delayed publication for years, wary of public reaction, and was scrupulous about acknowledging difficulties for his own theory. His autobiography reveals a remarkably modest and self-questioning mind.",
+    wikipedia: "Charles_Darwin",
     primary_corpus: [
       "On the Origin of Species",
       "The Descent of Man",
@@ -1549,6 +1764,9 @@ export const THINKERS: Thinker[] = [
     era: "1879–1955",
     tradition: "Science & Empiricism",
     framing: "German-American theoretical physicist",
+    bio:
+      "German-American theoretical physicist whose theories of relativity transformed physics and our understanding of space, time, and gravity. He used his global fame to advocate for pacifism, internationalism, and civil rights, and he urged President Roosevelt to develop an atomic bomb only when he believed Nazi Germany might do so first. He spent much of his later life on philosophical and political writing.",
+    wikipedia: "Albert_Einstein",
     primary_corpus: [
       "The World as I See It",
       "Out of My Later Years",
@@ -1571,6 +1789,9 @@ export const THINKERS: Thinker[] = [
     era: "1867–1934",
     tradition: "Science & Empiricism",
     framing: "Polish-French physicist and chemist",
+    bio:
+      "Polish-French physicist and chemist who discovered the elements polonium and radium and pioneered research into radioactivity. She was the first woman to win a Nobel Prize, the first person to win two Nobels, and remains the only person to win in two different sciences. She died of complications from prolonged radiation exposure; her notebooks are still too radioactive to handle without precautions.",
+    wikipedia: "Marie_Curie",
     primary_corpus: ["Pierre Curie (biography)", "Autobiographical Notes", "Letters"],
     excluded: ["specific feminist appropriations as her own argument"],
     key_patterns: [
@@ -1589,6 +1810,9 @@ export const THINKERS: Thinker[] = [
     era: "1934–1996",
     tradition: "Science & Empiricism",
     framing: "American astronomer and science communicator",
+    bio:
+      "American astronomer, planetary scientist, and the most influential science communicator of the 20th century. His Cosmos television series reached an estimated 500 million viewers across 60 countries; his Demon-Haunted World remains a definitive defense of scientific reasoning. His Pale Blue Dot reflection on humanity's place in the cosmos has become iconic.",
+    wikipedia: "Carl_Sagan",
     primary_corpus: [
       "The Demon-Haunted World",
       "Pale Blue Dot",
@@ -1611,6 +1835,9 @@ export const THINKERS: Thinker[] = [
     era: "1564–1642",
     tradition: "Science & Empiricism",
     framing: "Italian astronomer, physicist, and natural philosopher",
+    bio:
+      "Italian astronomer, physicist, and natural philosopher whose telescopic observations confirmed the Copernican model of the solar system. His advocacy for heliocentrism brought him before the Inquisition; he was forced to recant and spent his last years under house arrest. He worked through his blindness to complete his Two New Sciences, a foundational text of modern physics.",
+    wikipedia: "Galileo_Galilei",
     primary_corpus: [
       "Dialogue Concerning the Two Chief World Systems",
       "Two New Sciences",
@@ -1634,6 +1861,9 @@ export const THINKERS: Thinker[] = [
     era: "1906–1945",
     tradition: "20th Century Moral Voices",
     framing: "German Lutheran pastor and theologian, executed for resisting Nazism",
+    bio:
+      "German Lutheran pastor and theologian who joined the resistance against Nazism and was eventually executed by the regime in the final weeks of World War II. His Cost of Discipleship insisted that genuine faith requires costly action; his Letters and Papers from Prison record his thinking under conditions almost no theologian has faced. He was thirty-nine when he died.",
+    wikipedia: "Dietrich_Bonhoeffer",
     primary_corpus: [
       "The Cost of Discipleship",
       "Ethics",
@@ -1656,6 +1886,9 @@ export const THINKERS: Thinker[] = [
     era: "1905–1997",
     tradition: "20th Century Moral Voices",
     framing: "Austrian psychiatrist and Holocaust survivor",
+    bio:
+      "Austrian psychiatrist and Holocaust survivor who spent three years in Nazi concentration camps including Auschwitz. His Man's Search for Meaning, written in nine days after his liberation, argues that meaning is the primary human motivation and that even in the worst conditions humans retain the freedom to choose their attitude. He developed logotherapy as a meaning-centered school of psychotherapy.",
+    wikipedia: "Viktor_Frankl",
     primary_corpus: [
       "Man's Search for Meaning",
       "The Doctor and the Soul",
@@ -1677,6 +1910,9 @@ export const THINKERS: Thinker[] = [
     era: "1898–1963",
     tradition: "20th Century Moral Voices",
     framing: "British literary scholar and Christian writer",
+    bio:
+      "British literary scholar and Christian writer who taught at Oxford and Cambridge and wrote across remarkably varied genres — academic literary criticism, popular theology, science fiction, and the Narnia children's books. He had been an atheist into his thirties before converting in stages to Christianity. His Grief Observed, written after his wife's death, is one of his most personal works.",
+    wikipedia: "C._S._Lewis",
     primary_corpus: [
       "Mere Christianity",
       "The Screwtape Letters",
@@ -1699,6 +1935,9 @@ export const THINKERS: Thinker[] = [
     era: "1897–1980",
     tradition: "20th Century Moral Voices",
     framing: "American journalist, social activist, and Catholic Worker founder",
+    bio:
+      "American journalist and social activist who co-founded the Catholic Worker Movement in 1933, which combined newspaper publishing with houses of hospitality for the poor. She lived in voluntary poverty alongside those she served and committed herself to pacifism even during World War II. She is currently a candidate for Catholic sainthood.",
+    wikipedia: "Dorothy_Day",
     primary_corpus: [
       "The Long Loneliness",
       "Loaves and Fishes",
@@ -1721,6 +1960,9 @@ export const THINKERS: Thinker[] = [
     era: "1915–1968",
     tradition: "20th Century Moral Voices",
     framing: "American Trappist monk and writer",
+    bio:
+      "American Trappist monk who entered a Kentucky monastery in 1941 and remained a member of the cloistered Cistercian order until his accidental death in 1968. His Seven Storey Mountain became an unexpected bestseller; he spent the rest of his life writing on contemplation, social justice, and interreligious dialogue. He met with the Dalai Lama just weeks before he died.",
+    wikipedia: "Thomas_Merton",
     primary_corpus: [
       "The Seven Storey Mountain",
       "New Seeds of Contemplation",
@@ -1743,6 +1985,9 @@ export const THINKERS: Thinker[] = [
     era: "1892–1971",
     tradition: "20th Century Moral Voices",
     framing: "American Protestant theologian and political ethicist",
+    bio:
+      "American Protestant theologian and political ethicist who taught at Union Theological Seminary for over thirty years. His Christian realism argued that groups are morally less than the individuals composing them and that justice — not love — is the form love takes in politics. His writings influenced American policymakers across decades, including Barack Obama, who cited him as a favorite philosopher.",
+    wikipedia: "Reinhold_Niebuhr",
     primary_corpus: [
       "Moral Man and Immoral Society",
       "The Nature and Destiny of Man",
@@ -1764,6 +2009,9 @@ export const THINKERS: Thinker[] = [
     era: "1928–2016",
     tradition: "20th Century Moral Voices",
     framing: "Romanian-born American writer, Holocaust survivor",
+    bio:
+      "Romanian-born American writer who survived Auschwitz and Buchenwald as a teenager and became one of the most prominent voices keeping memory of the Holocaust alive. His memoir Night, written after a decade of self-imposed silence, is a foundational text of Holocaust literature. He won the Nobel Peace Prize in 1986.",
+    wikipedia: "Elie_Wiesel",
     primary_corpus: [
       "Night",
       "The Town Beyond the Wall",
@@ -1786,6 +2034,9 @@ export const THINKERS: Thinker[] = [
     era: "1936–2011",
     tradition: "20th Century Moral Voices",
     framing: "Czech playwright, dissident, and statesman",
+    bio:
+      "Czech playwright and dissident who became a leading voice of the underground opposition to Communist rule in Czechoslovakia. After leading the 1989 Velvet Revolution, he served as the country's last Czechoslovak president and then as the first president of the Czech Republic. His Power of the Powerless argues that small acts of integrity by ordinary people can crack totalitarian systems.",
+    wikipedia: "V%C3%A1clav_Havel",
     primary_corpus: [
       "The Power of the Powerless",
       "Letters to Olga",
@@ -1808,6 +2059,9 @@ export const THINKERS: Thinker[] = [
     era: "1918–2013",
     tradition: "20th Century Moral Voices",
     framing: "South African anti-apartheid leader and statesman",
+    bio:
+      "South African anti-apartheid leader who spent twenty-seven years in prison before being released to negotiate the end of apartheid and become the country's first democratically elected president. His commitment to reconciliation — not amnesty for injustice, but coexistence with former oppressors — shaped South Africa's transition. He served one term and stepped down voluntarily.",
+    wikipedia: "Nelson_Mandela",
     primary_corpus: [
       "Long Walk to Freedom",
       "Conversations with Myself",
@@ -1829,6 +2083,9 @@ export const THINKERS: Thinker[] = [
     era: "1933–2004",
     tradition: "20th Century Moral Voices",
     framing: "American writer and cultural critic",
+    bio:
+      "American writer and cultural critic whose essays on photography, illness, and the visual culture of suffering shaped late-20th-century intellectual life. She survived two cancer diagnoses, decades apart, and her Illness as Metaphor analyzed how disease becomes loaded with cultural meaning that hurts patients. She remained an unrelenting critic of intellectual sloppiness in any form.",
+    wikipedia: "Susan_Sontag",
     primary_corpus: [
       "Against Interpretation",
       "On Photography",

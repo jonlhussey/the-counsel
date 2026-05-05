@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, FormEvent } from "react";
 import { ThinkerBrowser } from "./components/ThinkerBrowser";
+import { ThinkerCard } from "./components/ThinkerCard";
 import { FormattedReflection } from "./components/FormattedReflection";
 import { Logo } from "./components/Logo";
 import { getThinker } from "@/app/lib/thinkers";
@@ -274,21 +275,11 @@ export default function HomePage() {
             Thinker
           </p>
           {selectedThinker && !showBrowser ? (
-            <div className="bg-surface border border-rule rounded p-4 flex items-start justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <p className="font-display text-xl font-medium text-ink leading-tight">
-                  {selectedThinker.name}
-                </p>
-                <p className="font-mono text-xs text-muted mt-1">
-                  {selectedThinker.era} · {selectedThinker.tradition}
-                </p>
-                <p className="text-sm text-secondary mt-2 leading-snug">
-                  {selectedThinker.framing}
-                </p>
-              </div>
+            <div className="relative">
+              <ThinkerCard thinker={selectedThinker} variant="result" />
               <button
                 onClick={() => setShowBrowser(true)}
-                className="font-mono text-xs uppercase tracking-wider text-secondary hover:text-ink underline underline-offset-4 whitespace-nowrap"
+                className="absolute top-4 right-4 text-xs uppercase tracking-wider text-secondary hover:text-ink underline underline-offset-4 whitespace-nowrap bg-surface px-2 py-1 rounded"
               >
                 Change
               </button>
@@ -304,13 +295,13 @@ export default function HomePage() {
           ) : (
             <button
               onClick={() => setShowBrowser(true)}
-              className="w-full bg-surface border border-rule rounded p-4 text-left hover:border-ink transition-colors"
+              className="w-full bg-surface border border-rule rounded p-5 text-left hover:border-ink transition-colors"
             >
-              <p className="font-display text-base text-secondary">
-                Browse 80 thinkers →
+              <p className="font-display text-lg text-ink mb-1">
+                Browse 85 thinkers →
               </p>
-              <p className="text-sm text-muted mt-1">
-                Searchable, filterable by tradition. List or grid view.
+              <p className="text-sm text-muted">
+                Searchable, filterable by tradition.
               </p>
             </button>
           )}
@@ -455,33 +446,20 @@ export default function HomePage() {
       {/* Result */}
       {result && (
         <section ref={responseRef} className="mb-12 animate-slide-up">
-          <div className="border-t border-rule pt-8 mb-8 flex items-start justify-between gap-4 flex-wrap">
-            {result.mode === "single" ? (
-              <div>
-                <p className="font-display text-sm tracking-[0.18em] uppercase text-muted font-medium mb-1.5">
-                  A reflection from
-                </p>
-                <p className="font-display text-3xl sm:text-4xl font-medium text-ink leading-tight">
-                  {result.thinkerName}
-                </p>
-              </div>
-            ) : (
-              <p className="font-display text-2xl sm:text-3xl font-medium text-ink leading-tight">
-                The Counsel convenes
-              </p>
-            )}
+          <div className="border-t border-rule pt-8 mb-8 flex items-center justify-between gap-4 flex-wrap">
+            <p className="font-display text-sm tracking-[0.18em] uppercase text-muted font-medium">
+              {result.mode === "single" ? "A reflection from" : "The Counsel convenes"}
+            </p>
             <button
               onClick={startNew}
-              className="text-sm text-secondary hover:text-ink underline-offset-4 hover:underline mt-2"
+              className="text-sm text-secondary hover:text-ink underline-offset-4 hover:underline"
             >
               ← Start new
             </button>
           </div>
 
           {result.mode === "single" ? (
-            <div className="reflection-content">
-              <FormattedReflection text={result.reflection} />
-            </div>
+            <SingleResultDisplay result={result} />
           ) : (
             <CouncilDisplay result={result} />
           )}
@@ -537,31 +515,47 @@ export default function HomePage() {
   );
 }
 
+function SingleResultDisplay({ result }: { result: SingleResult }) {
+  const thinker = getThinker(result.thinkerId);
+  return (
+    <div>
+      {thinker && (
+        <div className="mb-8">
+          <ThinkerCard thinker={thinker} variant="result" />
+        </div>
+      )}
+      <div className="reflection-content">
+        <FormattedReflection text={result.reflection} />
+      </div>
+    </div>
+  );
+}
+
 function CouncilDisplay({ result }: { result: CouncilResult }) {
   return (
-    <div className="space-y-8">
-      {result.reflections.map((r, i) => (
-        <article
-          key={i}
-          className={`bg-surface border border-rule rounded p-6 sm:p-8 animate-stagger-${i + 1}`}
-        >
-          <div className="mb-5 pb-4 border-b border-rule">
-            <p className="font-display text-xs tracking-[0.18em] uppercase text-muted font-medium mb-1.5">
+    <div className="space-y-10">
+      {result.reflections.map((r, i) => {
+        const thinker = result.thinkerIds[i] ? getThinker(result.thinkerIds[i]) : null;
+        return (
+          <div key={i} className={`animate-stagger-${i + 1}`}>
+            <p className="font-display text-xs tracking-[0.18em] uppercase text-muted font-medium mb-3">
               Voice {i + 1} of 3
             </p>
-            <p className="font-display text-2xl sm:text-3xl font-medium text-ink leading-tight">{r.thinker}</p>
+            {thinker && (
+              <div className="mb-6">
+                <ThinkerCard thinker={thinker} variant="result" />
+              </div>
+            )}
+            <div className="reflection-content pl-1">
+              <FormattedReflection text={r.reflection} />
+            </div>
           </div>
-          <div className="reflection-content">
-            <FormattedReflection text={r.reflection} />
-          </div>
-        </article>
-      ))}
+        );
+      })}
 
       {/* Synthesis */}
       <article className="synthesis-card">
-        <p className="section-label-large">
-          Synthesis
-        </p>
+        <p className="section-label-large">Synthesis</p>
         <div className="reflection-content">
           <FormattedReflection text={result.synthesis} />
         </div>
