@@ -29,18 +29,18 @@ export type CardData = {
 export function parseCard(text: string): CardData {
   const sections = splitSections(text);
 
-  const synopsis = (sections["Synopsis"] || "").trim();
+  const synopsis = stripEmphasis((sections["Synopsis"] || "").trim());
   const voicesRaw = (sections["Voices"] || sections["Voice"] || "").trim();
   const voices = voicesRaw
     .split(/\s*·\s*|\s*\n\s*/)
-    .map((v) => v.replace(/^[-*•]\s*/, "").trim())
+    .map((v) => stripEmphasis(v.replace(/^[-*•]\s*/, "").trim()))
     .filter(Boolean);
 
   const pullQuotesRaw =
     (sections["Pull Quotes"] || sections["Pull Quote"] || "").trim();
   const pullQuotes = parsePullQuotes(pullQuotesRaw);
 
-  const synthesis = (sections["Synthesis"] || "").trim();
+  const synthesis = stripEmphasis((sections["Synthesis"] || "").trim());
 
   return { synopsis, voices, pullQuotes, synthesis };
 }
@@ -59,6 +59,18 @@ function splitSections(text: string): Record<string, string> {
     map[label] = text.substring(start, end).trim();
   }
   return map;
+}
+
+function stripEmphasis(s: string): string {
+  // Remove paired markdown emphasis markers but keep the text inside.
+  // Handles **bold**, *italic*, _italic_. Be conservative — only paired pairs.
+  return s
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/\*(.+?)\*/g, "$1")
+    .replace(/_(.+?)_/g, "$1")
+    // Strip any leftover stray asterisks/underscores
+    .replace(/[*_]+/g, "")
+    .trim();
 }
 
 function parsePullQuotes(raw: string): PullQuote[] {
@@ -83,18 +95,18 @@ function parsePullQuotes(raw: string): PullQuote[] {
     const m = cleaned.match(/^["“"](.+?)["""]\s*[—–-]\s*(.+)$/);
     if (m) {
       const text = m[1].trim();
-      const attribution = m[2].trim();
+      const attribution = stripEmphasis(m[2].trim());
       const isParaphrase = /^\[paraphras/i.test(text) || /paraphras/i.test(text.slice(0, 20));
-      const cleanText = text.replace(/^\[paraphrasing\]\s*/i, "").trim();
+      const cleanText = stripEmphasis(text.replace(/^\[paraphrasing\]\s*/i, "").trim());
       quotes.push({ text: cleanText, attribution, isParaphrase });
     } else {
       // Fallback: try to handle missing closing quote or other variations
       const fallback = cleaned.match(/^["“"](.+?)\s*[—–-]\s*(.+)$/);
       if (fallback) {
         const text = fallback[1].trim().replace(/["""]$/, "");
-        const attribution = fallback[2].trim();
+        const attribution = stripEmphasis(fallback[2].trim());
         const isParaphrase = /^\[paraphras/i.test(text);
-        const cleanText = text.replace(/^\[paraphrasing\]\s*/i, "").trim();
+        const cleanText = stripEmphasis(text.replace(/^\[paraphrasing\]\s*/i, "").trim());
         quotes.push({ text: cleanText, attribution, isParaphrase });
       }
     }
