@@ -1,15 +1,16 @@
 // app/api/council/route.ts
-// Council mode: pick 3 thinkers, run their reflections in parallel using Haiku,
-// then synthesize using Sonnet.
+// Council mode: pick or accept 3 thinkers, run reflections in parallel,
+// then build the shareable card.
 
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 import {
   buildCouncilSystemPrompt,
-  buildSynthesisPrompt,
+  buildCouncilCardPrompt,
 } from "@/app/lib/systemPrompt";
 import { THINKERS, getThinker } from "@/app/lib/thinkers";
 import { checkRateLimit, getClientIp } from "@/app/lib/rateLimit";
+import { parseCard } from "@/app/lib/parseCard";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -17,8 +18,6 @@ export const maxDuration = 60;
 const HAIKU = "claude-haiku-4-5-20251001";
 const SONNET = "claude-sonnet-4-6";
 
-// Use Sonnet for the suggestion step too — picking 3 thinkers requires
-// understanding scenario nuance. This is one cheap call.
 async function suggestThinkers(
   client: Anthropic,
   scenario: string
@@ -51,12 +50,10 @@ The three ids must come from the roster above. Aim for diverse perspectives — 
     .map((b) => (b as { type: "text"; text: string }).text)
     .join("");
 
-  // Extract JSON from possible code fences
   const cleaned = text.replace(/```json|```/g, "").trim();
   const parsed = JSON.parse(cleaned);
   const ids: string[] = parsed.thinker_ids;
 
-  // Validate all ids exist
   const valid = ids.filter((id) => getThinker(id));
   if (valid.length !== 3) {
     throw new Error(
@@ -89,23 +86,25 @@ async function reflectAsThinker(
   return { thinker: thinker.name, reflection };
 }
 
-async function synthesize(
+async function buildCard(
   client: Anthropic,
   thinkerNames: string[],
+  scenario: string,
   reflections: { thinker: string; reflection: string }[]
 ): Promise<string> {
   const reflectionsText = reflections
     .map((r) => `=== ${r.thinker} ===\n${r.reflection}`)
     .join("\n\n");
 
+  // Card generation uses Sonnet — quote authenticity matters too much for Haiku.
   const message = await client.messages.create({
-    model: HAIKU,
-    max_tokens: 500,
-    system: buildSynthesisPrompt(thinkerNames),
+    model: SONNET,
+    max_tokens: 800,
+    system: buildCouncilCardPrompt(thinkerNames),
     messages: [
       {
         role: "user",
-        content: `Here are the three reflections to synthesize:\n\n${reflectionsText}`,
+        content: `User's scenario:\n\n${scenario}\n\nThe three reflections that were just written:\n\n${reflectionsText}\n\nNow produce the shareable card.`,
       },
     ],
   });
@@ -127,7 +126,6 @@ export async function POST(req: NextRequest) {
     }
 
     const ip = getClientIp(req.headers);
-    // Council uses more compute per request — slightly tighter limit.
     const { ok, remaining } = checkRateLimit(ip, "council", 10);
     if (!ok) {
       return NextResponse.json(
@@ -138,6 +136,9 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const scenario = (body?.scenario ?? "").toString().trim();
+    const userThinkerIds: string[] | undefined = Array.isArray(body?.thinkerIds)
+      ? body.thinkerIds
+      : undefined;
 
     if (!scenario) {
       return NextResponse.json(
@@ -154,26 +155,41 @@ export async function POST(req: NextRequest) {
 
     const client = new Anthropic({ apiKey });
 
-    // Step 1: pick 3 thinkers
-    const thinkerIds = await suggestThinkers(client, scenario);
+    // Step 1: pick thinkers (or use user-supplied)
+    let thinkerIds: string[];
+    if (userThinkerIds && userThinkerIds.length === 3) {
+      const valid = userThinkerIds.filter((id) => getThinker(id));
+      if (valid.length !== 3) {
+        return NextResponse.json(
+          { error: "Three valid thinker IDs are required." },
+          { status: 400 }
+        );
+      }
+      thinkerIds = valid;
+    } else {
+      thinkerIds = await suggestThinkers(client, scenario);
+    }
 
     // Step 2: get reflections in parallel
     const reflections = await Promise.all(
       thinkerIds.map((id) => reflectAsThinker(client, id, scenario))
     );
 
-    // Step 3: synthesize
-    const synthesis = await synthesize(
+    // Step 3: build the shareable card
+    const cardRaw = await buildCard(
       client,
       reflections.map((r) => r.thinker),
+      scenario,
       reflections
     );
+    const card = parseCard(cardRaw);
 
     return NextResponse.json(
       {
         thinkerIds,
         reflections,
-        synthesis,
+        card,
+        cardRaw,
         remaining,
       },
       { headers: { "X-RateLimit-Remaining": String(remaining) } }

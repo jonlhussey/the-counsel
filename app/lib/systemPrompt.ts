@@ -180,32 +180,103 @@ ${patternsList}
 **Confidence**: High, Medium, or Low — one short clause justifying.`;
 }
 
-// System prompt for the synthesis at the end of council mode
+// Synthesis prompt for Council mode — produces the shareable card output:
+// scenario synopsis, pull quotes, tight synthesis.
+export function buildCouncilCardPrompt(thinkerNames: string[]): string {
+  return `You are creating a shareable summary of a council of three thinkers reflecting on a user's scenario. Three thinkers have weighed in: ${thinkerNames.join(", ")}.
+
+Your output is a CARD — designed to be screenshotted and shared on social media. It must be tight, accurate, and quotable.
+
+# CRITICAL: Quote authenticity
+
+Pull quotes you include must be REAL quotations from each thinker's primary corpus. Do not invent quotes, paraphrase as if they were quotes, or attribute fabricated lines to any thinker.
+
+If you are not confident a specific line is a real quotation from the listed corpus, do ONE of the following:
+1. Skip that thinker's pull quote entirely (better to have 2 quotes than 1 fabricated quote).
+2. Use an attributed paraphrase, clearly marked: "[paraphrasing] ..." — Thinker
+
+When in doubt, leave it out. A shorter, accurate card is better than a longer card with invented quotes.
+
+For thinkers with thin corpora (Socrates, Buddha, Confucius, Laozi) or non-English originals (Rumi, the Buddha), be especially cautious — translation variance is real, and short pithy English versions of these thinkers' lines are often modern paraphrases, not direct quotes.
+
+# Output structure (use these EXACT section labels)
+
+**Synopsis**
+One sentence (no more than 22 words) capturing the user's scenario in neutral, third-person framing. This appears at the top of the card. Do not include direct quotes or names of people in the user's situation.
+
+**Voices**
+A simple list of the three thinkers' names, separated by " · " (with spaces around the middle dot). Just names, no extra text.
+
+**Pull Quotes**
+1 to 3 short, real quotes (each under 25 words) from the council, one per thinker at most. Format each as:
+"[Quote text]" — [Thinker name], [Work title]
+
+Skip any thinker for whom you cannot recall an authentic, fitting quote. Use an attributed paraphrase only if clearly marked. It is acceptable to have only 1 or 2 pull quotes total.
+
+**Synthesis**
+60-80 words. Tighter than a typical analysis. Name where the council converges, where it diverges, and end with a single line that points back to the user's reflection. Do not quote new sources here — the pull quotes above already do that.
+
+# Format requirements
+
+- Use the four bold section labels above and only those.
+- Do NOT use markdown headings (#, ##).
+- Do NOT add a "Synthesis:" or "Card:" prefix at the very top.
+- Begin your output immediately with **Synopsis**.
+
+Aim for a card that someone reading on Instagram in 8 seconds would understand and want to share.`;
+}
+
+// Single mode shareable card — same shape, but with one thinker.
+export function buildSingleCardPrompt(thinker: Thinker): string {
+  const corpusList = thinker.primary_corpus.slice(0, 3).map((c) => `- ${c}`).join("\n");
+
+  return `You are creating a shareable summary of ${thinker.name}'s reflection on a user's scenario. The longer reflection has already been generated; you are now producing a CARD designed to be screenshotted and shared on social media.
+
+# Thinker
+
+${thinker.name} (${thinker.era}). ${thinker.framing}.
+
+Primary corpus:
+${corpusList}
+
+# CRITICAL: Quote authenticity
+
+Pull quotes must be REAL quotations from ${thinker.name}'s primary corpus listed above. Do not invent quotes or paraphrase as if direct.
+
+If you are not confident a specific line is a real quotation from the corpus, do ONE of the following:
+1. Skip the pull quote entirely.
+2. Use an attributed paraphrase, clearly marked: "[paraphrasing] ..."
+
+When in doubt, leave it out. ${thinker.thin_corpus ? `\n${thinker.name}'s direct surviving writings are limited or contested. Be especially cautious — short pithy English versions of their lines are often modern paraphrases, not direct quotes.` : ""}
+
+# Output structure (use these EXACT section labels)
+
+**Synopsis**
+One sentence (no more than 22 words) capturing the user's scenario in neutral, third-person framing. Do not include direct quotes or names of people in the user's situation.
+
+**Voice**
+Just the thinker's name on its own: ${thinker.name}
+
+**Pull Quote**
+ONE short, real quote (under 25 words) from ${thinker.name}'s primary corpus, formatted as:
+"[Quote text]" — ${thinker.name}, [Work title]
+
+If you cannot recall an authentic, fitting quote, use an attributed paraphrase clearly marked. If even paraphrase feels uncertain, skip this section and write only:
+[no pull quote]
+
+**Synthesis**
+60-80 words. A tight, shareable distillation: name what ${thinker.name} would emphasize in this scenario and end with a line that points back to the user's reflection.
+
+# Format requirements
+
+- Use the four bold section labels above and only those.
+- Do NOT use markdown headings (#, ##).
+- Begin your output immediately with **Synopsis**.
+
+Aim for a card that someone reading on Instagram in 8 seconds would understand and want to share.`;
+}
+
+// Legacy synthesis prompt — kept for backward compatibility but unused now.
 export function buildSynthesisPrompt(thinkerNames: string[]): string {
-  return `You are synthesizing three reflections from a council of thinkers: ${thinkerNames.join(", ")}.
-
-Read the three reflections that follow. Do NOT add new claims about what these thinkers would say. Instead:
-
-1. Identify 1–2 places where the reflections converge — common ground despite different traditions.
-2. Identify 1–2 places where they diverge — genuine differences in priority or method.
-3. Frame this as an invitation to reflection for the user, not a resolution.
-
-Keep the synthesis under 120 words. Do not quote new sources. Use the names of the thinkers naturally.
-
-CRITICAL FORMATTING RULES:
-- Do NOT use markdown headings (no #, ##, ###).
-- Do NOT add a title like "Synthesis:" at the start — the app already labels this section.
-- Begin your response immediately with the first bold section label.
-- Use ONLY the three section labels below, each in **bold** on its own line, followed by the body text.
-
-Output structure (use exactly these three labels):
-
-**Where they converge**
-A short paragraph or two sentences naming the shared ground.
-
-**Where they diverge**
-A short paragraph noting the genuine difference.
-
-**For your reflection**
-One sentence inviting the user to consider what speaks to their own situation.`;
+  return buildCouncilCardPrompt(thinkerNames);
 }

@@ -1,12 +1,65 @@
 // app/api/reflect/route.ts
+// Single thinker mode: returns the long reflection and the shareable card data.
+
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
-import { buildSystemPrompt } from "@/app/lib/systemPrompt";
-import { getThinker } from "@/app/lib/thinkers";
+import {
+  buildSystemPrompt,
+  buildSingleCardPrompt,
+} from "@/app/lib/systemPrompt";
+import { getThinker, type Thinker } from "@/app/lib/thinkers";
 import { checkRateLimit, getClientIp } from "@/app/lib/rateLimit";
+import { parseCard } from "@/app/lib/parseCard";
 
 export const runtime = "nodejs";
-export const maxDuration = 30;
+export const maxDuration = 45;
+
+const SONNET = "claude-sonnet-4-6";
+const HAIKU = "claude-haiku-4-5-20251001";
+
+async function generateReflection(
+  client: Anthropic,
+  thinker: Thinker,
+  scenario: string
+): Promise<string> {
+  const message = await client.messages.create({
+    model: SONNET,
+    max_tokens: 1500,
+    system: buildSystemPrompt(thinker),
+    messages: [{ role: "user", content: `Scenario:\n\n${scenario}` }],
+  });
+
+  return message.content
+    .filter((b) => b.type === "text")
+    .map((b) => (b as { type: "text"; text: string }).text)
+    .join("\n");
+}
+
+async function generateCard(
+  client: Anthropic,
+  thinker: Thinker,
+  scenario: string,
+  reflection: string
+): Promise<string> {
+  // Card uses Haiku — it's a summarization, not deep reasoning.
+  // Pass the full reflection as context so the card stays consistent with it.
+  const message = await client.messages.create({
+    model: HAIKU,
+    max_tokens: 600,
+    system: buildSingleCardPrompt(thinker),
+    messages: [
+      {
+        role: "user",
+        content: `User's scenario:\n\n${scenario}\n\nThe long-form reflection that was just written:\n\n${reflection}\n\nNow produce the shareable card.`,
+      },
+    ],
+  });
+
+  return message.content
+    .filter((b) => b.type === "text")
+    .map((b) => (b as { type: "text"; text: string }).text)
+    .join("\n");
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -60,25 +113,21 @@ export async function POST(req: NextRequest) {
 
     const client = new Anthropic({ apiKey });
 
-    const message = await client.messages.create({
-      model: "claude-sonnet-4-6",
-      max_tokens: 1500,
-      system: buildSystemPrompt(thinker),
-      messages: [
-        {
-          role: "user",
-          content: `Scenario:\n\n${scenario}`,
-        },
-      ],
-    });
+    // First: the long reflection (the user is waiting on this)
+    const reflection = await generateReflection(client, thinker, scenario);
 
-    const text = message.content
-      .filter((block) => block.type === "text")
-      .map((block) => (block as { type: "text"; text: string }).text)
-      .join("\n");
+    // Second: the card. We pass the reflection so the card stays consistent.
+    const cardRaw = await generateCard(client, thinker, scenario, reflection);
+    const card = parseCard(cardRaw);
 
     return NextResponse.json(
-      { reflection: text, thinker: thinker.name, remaining },
+      {
+        reflection,
+        thinker: thinker.name,
+        card,
+        cardRaw, // included for debugging — UI doesn't need it
+        remaining,
+      },
       { headers: { "X-RateLimit-Remaining": String(remaining) } }
     );
   } catch (err: unknown) {

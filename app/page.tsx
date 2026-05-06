@@ -4,10 +4,13 @@ import { useState, useEffect, useRef, FormEvent } from "react";
 import { ThinkerBrowser } from "./components/ThinkerBrowser";
 import { ThinkerCard } from "./components/ThinkerCard";
 import { FormattedReflection } from "./components/FormattedReflection";
+import { ShareableCard } from "./components/ShareableCard";
 import { Logo } from "./components/Logo";
 import { getThinker } from "@/app/lib/thinkers";
+import type { CardData } from "@/app/lib/parseCard";
 
 type Mode = "single" | "council";
+type Picker = "user" | "auto";
 
 type SingleResult = {
   mode: "single";
@@ -15,6 +18,7 @@ type SingleResult = {
   thinkerName: string;
   scenario: string;
   reflection: string;
+  card: CardData;
 };
 
 type CouncilResult = {
@@ -22,7 +26,7 @@ type CouncilResult = {
   thinkerIds: string[];
   reflections: { thinker: string; reflection: string }[];
   scenario: string;
-  synthesis: string;
+  card: CardData;
 };
 
 type Result = SingleResult | CouncilResult;
@@ -32,14 +36,17 @@ type HistoryItem = Result & {
   timestamp: number;
 };
 
-const STORAGE_KEY = "counsel-history-v1";
+const STORAGE_KEY = "counsel-history-v2"; // bumped from v1 due to shape change
 const MAX_HISTORY = 50;
 
 export default function HomePage() {
   const [mode, setMode] = useState<Mode>("single");
+  const [picker, setPicker] = useState<Picker>("user");
   const [scenario, setScenario] = useState("");
-  const [thinkerId, setThinkerId] = useState<string | null>(null);
+  const [thinkerId, setThinkerId] = useState<string | null>(null); // for single
+  const [councilThinkerIds, setCouncilThinkerIds] = useState<string[]>([]); // for council manual
   const [showBrowser, setShowBrowser] = useState(false);
+  const [browserMode, setBrowserMode] = useState<"single" | "council">("single");
 
   const [result, setResult] = useState<Result | null>(null);
   const [loading, setLoading] = useState(false);
@@ -47,7 +54,6 @@ export default function HomePage() {
 
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [showHistory, setShowHistory] = useState(false);
-  const [copied, setCopied] = useState(false);
   const responseRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -87,6 +93,8 @@ export default function HomePage() {
     setScenario(item.scenario);
     if (item.mode === "single") {
       setThinkerId(item.thinkerId);
+    } else {
+      setCouncilThinkerIds(item.thinkerIds);
     }
     setResult(item);
     setShowHistory(false);
@@ -98,9 +106,9 @@ export default function HomePage() {
   function startNew() {
     setScenario("");
     setThinkerId(null);
+    setCouncilThinkerIds([]);
     setResult(null);
     setError(null);
-    setCopied(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
     setTimeout(() => {
       const ta = document.getElementById("scenario") as HTMLTextAreaElement | null;
@@ -108,13 +116,45 @@ export default function HomePage() {
     }, 600);
   }
 
+  function openBrowser(forMode: "single" | "council") {
+    setBrowserMode(forMode);
+    setShowBrowser(true);
+  }
+
+  function handleBrowserSelect(id: string) {
+    if (browserMode === "single") {
+      setThinkerId(id);
+      setShowBrowser(false);
+    } else {
+      // Council manual: collect 3 ids
+      setCouncilThinkerIds((prev) => {
+        if (prev.includes(id)) {
+          // Toggle off
+          return prev.filter((x) => x !== id);
+        }
+        if (prev.length >= 3) {
+          return prev; // already have 3
+        }
+        const next = [...prev, id];
+        if (next.length === 3) {
+          setShowBrowser(false);
+        }
+        return next;
+      });
+    }
+  }
+
+  // Validation: do we have what we need to submit?
+  function canSubmit(): boolean {
+    if (!scenario.trim() || loading) return false;
+    if (mode === "single" && picker === "user" && !thinkerId) return false;
+    if (mode === "council" && picker === "user" && councilThinkerIds.length !== 3) return false;
+    return true;
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!scenario.trim() || loading) return;
-    if (mode === "single" && !thinkerId) {
-      setError("Choose a thinker first.");
-      return;
-    }
+    if (!canSubmit()) return;
 
     setLoading(true);
     setError(null);
@@ -122,10 +162,32 @@ export default function HomePage() {
 
     try {
       if (mode === "single") {
+        // For "auto" picker in single mode, we need to ask the API to pick.
+        // Reuse the council suggestion logic via a one-thinker variant by
+        // sending a flag. Simpler: just call council suggest endpoint —
+        // but we don't have one. Inline the logic in the API. For now we
+        // pick client-side from a tiny prompt OR ask council to pick 1.
+        // Cleanest: have reflect API accept thinkerId="auto" and pick server-side.
+        let useThinkerId = thinkerId;
+        if (picker === "auto") {
+          // Call the auto-pick endpoint
+          const pickRes = await fetch("/api/pick-thinker", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ scenario: scenario.trim(), count: 1 }),
+          });
+          const pickData = await pickRes.json();
+          if (!pickRes.ok) {
+            setError(pickData.error || "Could not pick a thinker.");
+            return;
+          }
+          useThinkerId = pickData.thinkerIds[0];
+        }
+
         const res = await fetch("/api/reflect", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ scenario: scenario.trim(), thinkerId }),
+          body: JSON.stringify({ scenario: scenario.trim(), thinkerId: useThinkerId }),
         });
         const data = await res.json();
         if (!res.ok) {
@@ -134,18 +196,26 @@ export default function HomePage() {
         }
         const r: SingleResult = {
           mode: "single",
-          thinkerId: thinkerId!,
+          thinkerId: useThinkerId!,
           thinkerName: data.thinker,
           scenario: scenario.trim(),
           reflection: data.reflection,
+          card: data.card,
         };
         setResult(r);
         saveToHistory(r);
       } else {
+        // Council mode
+        const body: { scenario: string; thinkerIds?: string[] } = {
+          scenario: scenario.trim(),
+        };
+        if (picker === "user") {
+          body.thinkerIds = councilThinkerIds;
+        }
         const res = await fetch("/api/council", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ scenario: scenario.trim() }),
+          body: JSON.stringify(body),
         });
         const data = await res.json();
         if (!res.ok) {
@@ -157,7 +227,7 @@ export default function HomePage() {
           thinkerIds: data.thinkerIds,
           reflections: data.reflections,
           scenario: scenario.trim(),
-          synthesis: data.synthesis,
+          card: data.card,
         };
         setResult(r);
         saveToHistory(r);
@@ -171,52 +241,6 @@ export default function HomePage() {
     } finally {
       setLoading(false);
     }
-  }
-
-  function copyResult() {
-    if (!result) return;
-    let text = `Scenario: ${result.scenario}\n\n`;
-    if (result.mode === "single") {
-      text += `Reflection from ${result.thinkerName}:\n\n${result.reflection}`;
-    } else {
-      for (const r of result.reflections) {
-        text += `=== ${r.thinker} ===\n${r.reflection}\n\n`;
-      }
-      text += `=== Synthesis ===\n${result.synthesis}`;
-    }
-    text += `\n\n— The Counsel`;
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
-  function shareTwitter() {
-    if (!result) return;
-    let snippet = "";
-    if (result.mode === "single") {
-      snippet = result.reflection
-        .replace(/\*\*/g, "")
-        .replace(/^>/gm, "")
-        .replace(/\[INFERENCE\]/gi, "")
-        .replace(/\n+/g, " ")
-        .slice(0, 180)
-        .trim();
-      const text = encodeURIComponent(
-        `"${snippet}..." — ${result.thinkerName}, via The Counsel`
-      );
-      window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
-    } else {
-      const names = result.reflections.map((r) => r.thinker).join(", ");
-      const text = encodeURIComponent(
-        `A council of ${names} reflecting on: "${result.scenario.slice(0, 100)}..." — via The Counsel`
-      );
-      window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
-    }
-  }
-
-  function shareFacebook() {
-    const url = encodeURIComponent(window.location.href);
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
   }
 
   const selectedThinker = thinkerId ? getThinker(thinkerId) : null;
@@ -249,27 +273,49 @@ export default function HomePage() {
         </p>
         <div className="mode-toggle">
           <button
-            onClick={() => setMode("single")}
+            onClick={() => { setMode("single"); setResult(null); }}
             className={mode === "single" ? "active" : ""}
           >
             One thinker
           </button>
           <button
-            onClick={() => setMode("council")}
+            onClick={() => { setMode("council"); setResult(null); }}
             className={mode === "council" ? "active" : ""}
           >
             Council of three
           </button>
         </div>
+      </section>
+
+      {/* Picker toggle: I'll choose vs Surprise me */}
+      <section className="mb-8 animate-slide-up">
+        <p className="font-display text-sm tracking-[0.18em] uppercase text-secondary font-medium mb-4">
+          {mode === "single" ? "Who will reflect?" : "Who will be on the council?"}
+        </p>
+        <div className="mode-toggle">
+          <button
+            onClick={() => setPicker("user")}
+            className={picker === "user" ? "active" : ""}
+          >
+            I&apos;ll choose
+          </button>
+          <button
+            onClick={() => setPicker("auto")}
+            className={picker === "auto" ? "active" : ""}
+          >
+            Surprise me
+          </button>
+        </div>
         <p className="mt-3 text-sm text-muted leading-relaxed">
-          {mode === "single"
-            ? "Choose a thinker. Their reflection will draw from their primary writings."
-            : "The Counsel will pick three thinkers from different traditions, then synthesize where they converge and diverge."}
+          {mode === "single" && picker === "user" && "Pick one thinker from the roster."}
+          {mode === "single" && picker === "auto" && "After you describe your scenario, The Counsel will choose a thinker whose writings best fit."}
+          {mode === "council" && picker === "user" && "Pick three thinkers — they need not share a tradition."}
+          {mode === "council" && picker === "auto" && "After you describe your scenario, The Counsel will choose three thinkers from different traditions."}
         </p>
       </section>
 
-      {/* Thinker selection (single mode only) */}
-      {mode === "single" && (
+      {/* Thinker selection (only when picker = user) */}
+      {picker === "user" && mode === "single" && (
         <section className="mb-8 animate-slide-up">
           <p className="font-display text-sm tracking-[0.18em] uppercase text-secondary font-medium mb-4">
             Thinker
@@ -278,7 +324,7 @@ export default function HomePage() {
             <div className="relative">
               <ThinkerCard thinker={selectedThinker} variant="result" />
               <button
-                onClick={() => setShowBrowser(true)}
+                onClick={() => openBrowser("single")}
                 className="absolute top-4 right-4 text-xs uppercase tracking-wider text-secondary hover:text-ink underline underline-offset-4 whitespace-nowrap bg-surface px-2 py-1 rounded"
               >
                 Change
@@ -286,15 +332,14 @@ export default function HomePage() {
             </div>
           ) : showBrowser ? (
             <ThinkerBrowser
-              onSelect={(id) => {
-                setThinkerId(id);
-                setShowBrowser(false);
-              }}
+              onSelect={handleBrowserSelect}
               onClose={() => setShowBrowser(false)}
+              selectedIds={[]}
+              maxSelection={1}
             />
           ) : (
             <button
-              onClick={() => setShowBrowser(true)}
+              onClick={() => openBrowser("single")}
               className="w-full bg-surface border border-rule rounded p-5 text-left hover:border-ink transition-colors"
             >
               <p className="font-display text-lg text-ink mb-1">
@@ -302,6 +347,64 @@ export default function HomePage() {
               </p>
               <p className="text-sm text-muted">
                 Searchable, filterable by tradition.
+              </p>
+            </button>
+          )}
+        </section>
+      )}
+
+      {picker === "user" && mode === "council" && (
+        <section className="mb-8 animate-slide-up">
+          <p className="font-display text-sm tracking-[0.18em] uppercase text-secondary font-medium mb-4">
+            Three thinkers
+          </p>
+          {showBrowser ? (
+            <ThinkerBrowser
+              onSelect={handleBrowserSelect}
+              onClose={() => setShowBrowser(false)}
+              selectedIds={councilThinkerIds}
+              maxSelection={3}
+            />
+          ) : councilThinkerIds.length > 0 ? (
+            <div className="space-y-3">
+              {councilThinkerIds.map((id) => {
+                const t = getThinker(id);
+                if (!t) return null;
+                return (
+                  <div key={id} className="relative">
+                    <ThinkerCard thinker={t} variant="result" />
+                    <button
+                      onClick={() =>
+                        setCouncilThinkerIds((prev) => prev.filter((x) => x !== id))
+                      }
+                      className="absolute top-4 right-4 text-xs uppercase tracking-wider text-secondary hover:text-red-700 underline underline-offset-4 bg-surface px-2 py-1 rounded"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                );
+              })}
+              <button
+                onClick={() => openBrowser("council")}
+                className="w-full bg-surface border border-rule rounded p-4 text-left hover:border-ink transition-colors"
+              >
+                <p className="font-display text-base text-ink">
+                  {councilThinkerIds.length < 3
+                    ? `Add ${3 - councilThinkerIds.length} more →`
+                    : "Change selection →"}
+                </p>
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => openBrowser("council")}
+              className="w-full bg-surface border border-rule rounded p-5 text-left hover:border-ink transition-colors"
+            >
+              <p className="font-display text-lg text-ink mb-1">
+                Pick three thinkers →
+              </p>
+              <p className="text-sm text-muted">
+                Selected thinkers will appear here.
               </p>
             </button>
           )}
@@ -350,11 +453,7 @@ export default function HomePage() {
             </button>
             <button
               type="submit"
-              disabled={
-                loading ||
-                !scenario.trim() ||
-                (mode === "single" && !thinkerId)
-              }
+              disabled={!canSubmit()}
               className="px-7 py-3 bg-ink text-canvas font-medium text-sm tracking-wide disabled:opacity-40 disabled:cursor-not-allowed hover:bg-secondary transition-colors rounded"
             >
               {loading ? (
@@ -446,6 +545,7 @@ export default function HomePage() {
       {/* Result */}
       {result && (
         <section ref={responseRef} className="mb-12 animate-slide-up">
+          {/* Header bar */}
           <div className="border-t border-rule pt-8 mb-8 flex items-center justify-between gap-4 flex-wrap">
             <p className="font-display text-sm tracking-[0.18em] uppercase text-muted font-medium">
               {result.mode === "single" ? "A reflection from" : "The Counsel convenes"}
@@ -458,46 +558,31 @@ export default function HomePage() {
             </button>
           </div>
 
-          {result.mode === "single" ? (
-            <SingleResultDisplay result={result} />
-          ) : (
-            <CouncilDisplay result={result} />
-          )}
+          {/* THE SHAREABLE CARD — the primary artifact */}
+          <ShareableCard card={result.card} />
 
-          {/* Action bar */}
-          <div className="mt-12 pt-8 border-t border-rule flex flex-col items-center gap-6">
+          {/* The longer reflection(s) below — for those who want depth */}
+          <div className="mt-16">
+            <div className="mb-6 pb-3 border-b border-rule">
+              <p className="font-display text-sm tracking-[0.18em] uppercase text-muted font-medium">
+                The full reflection
+              </p>
+            </div>
+            {result.mode === "single" ? (
+              <SingleResultDisplay result={result} />
+            ) : (
+              <CouncilDisplay result={result} />
+            )}
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="mt-12 pt-8 border-t border-rule flex justify-center">
             <button
               onClick={startNew}
               className="px-8 py-3 bg-ink text-canvas font-medium text-sm tracking-wide hover:bg-secondary transition-colors rounded"
             >
               {result.mode === "single" ? "Seek another reflection" : "Convene a new council"}
             </button>
-
-            <div className="w-full flex items-center justify-between gap-4 flex-wrap">
-              <p className="text-sm text-muted italic">
-                Share this reflection with someone who might appreciate it.
-              </p>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={copyResult}
-                  className="font-mono text-xs uppercase tracking-wider px-3 py-2 border border-rule rounded hover:border-ink transition-colors"
-                >
-                  {copied ? "Copied" : "Copy"}
-                </button>
-                <button
-                  onClick={shareTwitter}
-                  className="font-mono text-xs uppercase tracking-wider px-3 py-2 border border-rule rounded hover:border-ink transition-colors"
-                >
-                  X / Twitter
-                </button>
-                <button
-                  onClick={shareFacebook}
-                  className="font-mono text-xs uppercase tracking-wider px-3 py-2 border border-rule rounded hover:border-ink transition-colors"
-                >
-                  Facebook
-                </button>
-              </div>
-            </div>
           </div>
         </section>
       )}
@@ -552,14 +637,6 @@ function CouncilDisplay({ result }: { result: CouncilResult }) {
           </div>
         );
       })}
-
-      {/* Synthesis */}
-      <article className="synthesis-card">
-        <p className="section-label-large">Synthesis</p>
-        <div className="reflection-content">
-          <FormattedReflection text={result.synthesis} />
-        </div>
-      </article>
     </div>
   );
 }
