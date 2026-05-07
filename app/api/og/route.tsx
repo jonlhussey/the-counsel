@@ -9,9 +9,8 @@ export const runtime = "edge";
 
 /**
  * Loads a Google Font as a TTF buffer for use with Satori.
- *
- * Trick: by sending an old-IE User-Agent header, Google Fonts CSS API serves
- * .ttf URLs (instead of the .woff2 it serves to modern browsers). Satori
+ * IE-User-Agent trick: Google Fonts CSS API serves TTF URLs (instead of the
+ * WOFF2 it serves to modern browsers) when fed an old User-Agent. Satori
  * requires TTF/OTF, so this is necessary.
  */
 async function loadGoogleFont(
@@ -19,7 +18,6 @@ async function loadGoogleFont(
   weight: number,
   italic: boolean = false
 ): Promise<ArrayBuffer> {
-  // Build the CSS request URL
   const params = new URLSearchParams();
   if (italic) {
     params.set("family", `${family}:ital,wght@1,${weight}`);
@@ -30,16 +28,13 @@ async function loadGoogleFont(
 
   const css = await fetch(url, {
     headers: {
-      // Pretending to be IE 9 forces Google to return TTF instead of WOFF2
       "User-Agent":
         "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)",
     },
   }).then((r) => r.text());
 
-  // Find the font URL in the returned CSS. Google's CSS API uses two URL formats:
-  //   - Direct .ttf:           https://fonts.gstatic.com/.../FontName.ttf
-  //   - Newer kit endpoint:    https://fonts.gstatic.com/l/font?kit=...
-  // Both serve TTF data when requested with the IE User-Agent.
+  // Match any URL on fonts.gstatic.com — Google uses two URL formats
+  // (direct .ttf and /l/font?kit=...), both serve TTF data.
   const match = css.match(/src:\s*url\((https:\/\/fonts\.gstatic\.com\/[^)]+)\)/);
   if (!match) {
     throw new Error(
@@ -73,7 +68,6 @@ export async function GET(req: NextRequest) {
         return { text: text || "", attribution: attribution || "" };
       });
 
-    // Load fonts in parallel via the IE-UA trick
     const [fraunces400, frauncesItalic, lexend400, lexend500] = await Promise.all([
       loadGoogleFont("Fraunces", 400, false),
       loadGoogleFont("Fraunces", 400, true),
@@ -91,174 +85,175 @@ export async function GET(req: NextRequest) {
             width: 1080,
             height: 1080,
             background: "#fafaf7",
-            padding: "64px 72px",
+            padding: "70px 80px",
             display: "flex",
             flexDirection: "column",
+            justifyContent: "space-between",
             fontFamily: "Lexend",
             color: "#1a1814",
           }}
         >
-          {/* Header */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 16,
-              marginBottom: 44,
-            }}
-          >
-            <svg width="40" height="50" viewBox="0 0 80 100">
-              <line x1="14" y1="20" x2="14" y2="80" stroke="#1a1814" strokeWidth="9" strokeLinecap="round" />
-              <line x1="40" y1="14" x2="40" y2="86" stroke="#1a1814" strokeWidth="9" strokeLinecap="round" />
-              <line x1="66" y1="20" x2="66" y2="80" stroke="#1a1814" strokeWidth="9" strokeLinecap="round" />
-            </svg>
-            <span
-              style={{
-                fontFamily: "Fraunces",
-                fontSize: 32,
-                color: "#1a1814",
-                lineHeight: 1,
-              }}
-            >
-              The Counsel
-            </span>
-          </div>
-
-          {/* Synopsis */}
-          <div style={{ display: "flex", flexDirection: "column", marginBottom: 28 }}>
-            <span
-              style={{
-                fontFamily: "Lexend",
-                fontSize: 13,
-                letterSpacing: 3,
-                textTransform: "uppercase",
-                color: "#888780",
-                fontWeight: 500,
-                marginBottom: 12,
-              }}
-            >
-              Scenario
-            </span>
-            <span
-              style={{
-                fontFamily: "Fraunces",
-                fontSize: 34,
-                lineHeight: 1.25,
-                color: "#1a1814",
-                fontWeight: 400,
-              }}
-            >
-              {synopsis}
-            </span>
-          </div>
-
-          {/* Voices */}
-          <div style={{ display: "flex", flexDirection: "column", marginBottom: 28 }}>
-            <span
-              style={{
-                fontFamily: "Lexend",
-                fontSize: 13,
-                letterSpacing: 3,
-                textTransform: "uppercase",
-                color: "#888780",
-                fontWeight: 500,
-                marginBottom: 8,
-              }}
-            >
-              {isCouncil ? "A council of three" : "Reflection from"}
-            </span>
-            <span
-              style={{
-                fontFamily: "Fraunces",
-                fontStyle: "italic",
-                fontSize: 26,
-                lineHeight: 1.3,
-                color: "#444441",
-              }}
-            >
-              {voices.join("  ·  ")}
-            </span>
-          </div>
-
-          {/* Pull quotes */}
-          {quotesToShow.map((q, i) => (
+          {/* Top section: header + content */}
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {/* Header */}
             <div
-              key={i}
               style={{
                 display: "flex",
-                flexDirection: "column",
-                borderLeft: "3px solid #1a1814",
-                paddingLeft: 22,
-                marginBottom: 22,
+                alignItems: "center",
+                gap: 18,
+                marginBottom: 52,
               }}
             >
+              <svg width="46" height="58" viewBox="0 0 80 100">
+                <line x1="14" y1="20" x2="14" y2="80" stroke="#1a1814" strokeWidth="9" strokeLinecap="round" />
+                <line x1="40" y1="14" x2="40" y2="86" stroke="#1a1814" strokeWidth="9" strokeLinecap="round" />
+                <line x1="66" y1="20" x2="66" y2="80" stroke="#1a1814" strokeWidth="9" strokeLinecap="round" />
+              </svg>
               <span
                 style={{
                   fontFamily: "Fraunces",
-                  fontStyle: "italic",
-                  fontSize: 22,
-                  lineHeight: 1.35,
+                  fontSize: 40,
                   color: "#1a1814",
-                  marginBottom: 8,
+                  lineHeight: 1,
                 }}
               >
-                &ldquo;{q.text}&rdquo;
-              </span>
-              <span
-                style={{
-                  fontFamily: "Lexend",
-                  fontSize: 14,
-                  color: "#888780",
-                  fontWeight: 500,
-                }}
-              >
-                — {q.attribution}
+                The Counsel
               </span>
             </div>
-          ))}
 
-          {/* Synthesis */}
-          {synthesis && (
-            <div style={{ display: "flex", flexDirection: "column", marginTop: 8, marginBottom: 24 }}>
+            {/* Synopsis */}
+            <div style={{ display: "flex", flexDirection: "column", marginBottom: 36 }}>
               <span
                 style={{
                   fontFamily: "Lexend",
-                  fontSize: 13,
+                  fontSize: 15,
                   letterSpacing: 3,
                   textTransform: "uppercase",
                   color: "#888780",
                   fontWeight: 500,
-                  marginBottom: 12,
+                  marginBottom: 14,
                 }}
               >
-                Synthesis
+                Scenario
               </span>
               <span
                 style={{
                   fontFamily: "Fraunces",
-                  fontSize: 19,
-                  lineHeight: 1.5,
+                  fontSize: 36,
+                  lineHeight: 1.25,
                   color: "#1a1814",
                   fontWeight: 400,
                 }}
               >
-                {synthesis}
+                {synopsis}
               </span>
             </div>
-          )}
 
-          {/* Spacer */}
-          <div style={{ flex: 1, display: "flex" }} />
+            {/* Voices */}
+            <div style={{ display: "flex", flexDirection: "column", marginBottom: 36 }}>
+              <span
+                style={{
+                  fontFamily: "Lexend",
+                  fontSize: 15,
+                  letterSpacing: 3,
+                  textTransform: "uppercase",
+                  color: "#888780",
+                  fontWeight: 500,
+                  marginBottom: 10,
+                }}
+              >
+                {isCouncil ? "A council of three" : "Reflection from"}
+              </span>
+              <span
+                style={{
+                  fontFamily: "Fraunces",
+                  fontStyle: "italic",
+                  fontSize: 30,
+                  lineHeight: 1.3,
+                  color: "#444441",
+                }}
+              >
+                {voices.join("  ·  ")}
+              </span>
+            </div>
 
-          {/* Footer */}
+            {/* Pull quotes */}
+            {quotesToShow.map((q, i) => (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  borderLeft: "3px solid #1a1814",
+                  paddingLeft: 24,
+                  marginBottom: 28,
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "Fraunces",
+                    fontStyle: "italic",
+                    fontSize: 32,
+                    lineHeight: 1.32,
+                    color: "#1a1814",
+                    marginBottom: 12,
+                  }}
+                >
+                  &ldquo;{q.text}&rdquo;
+                </span>
+                <span
+                  style={{
+                    fontFamily: "Lexend",
+                    fontSize: 17,
+                    color: "#888780",
+                    fontWeight: 500,
+                  }}
+                >
+                  — {q.attribution}
+                </span>
+              </div>
+            ))}
+
+            {/* Synthesis */}
+            {synthesis && (
+              <div style={{ display: "flex", flexDirection: "column", marginTop: 12 }}>
+                <span
+                  style={{
+                    fontFamily: "Lexend",
+                    fontSize: 15,
+                    letterSpacing: 3,
+                    textTransform: "uppercase",
+                    color: "#888780",
+                    fontWeight: 500,
+                    marginBottom: 14,
+                  }}
+                >
+                  Synthesis
+                </span>
+                <span
+                  style={{
+                    fontFamily: "Fraunces",
+                    fontSize: 22,
+                    lineHeight: 1.5,
+                    color: "#1a1814",
+                    fontWeight: 400,
+                  }}
+                >
+                  {synthesis}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Footer (always at bottom thanks to space-between on parent) */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              paddingTop: 20,
+              paddingTop: 24,
               borderTop: "1px solid #d3d1c7",
-              fontSize: 14,
+              fontSize: 16,
               color: "#888780",
             }}
           >
@@ -268,7 +263,7 @@ export async function GET(req: NextRequest) {
             <span
               style={{
                 fontFamily: "Lexend",
-                fontSize: 12,
+                fontSize: 13,
                 letterSpacing: 2,
                 textTransform: "uppercase",
               }}
