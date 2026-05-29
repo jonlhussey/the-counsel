@@ -78,6 +78,39 @@ export async function GET(req: NextRequest) {
     const isCouncil = voices.length > 1;
     const quotesToShow = quotes.slice(0, isCouncil ? 2 : 1);
 
+    // Compute content density — when content is long, the canvas can't fit
+    // everything at default sizes. We measure approximate visual weight and
+    // adjust type sizes downward to keep the footer on-canvas.
+    const synthesisWords = synthesis.split(/\s+/).filter(Boolean).length;
+    const totalQuoteChars = quotesToShow.reduce(
+      (sum, q) => sum + q.text.length + q.attribution.length,
+      0
+    );
+    // Heuristic: cards with long synthesis (80+ words) or heavy quotes (300+
+    // total chars across all displayed quotes) need tighter sizing.
+    const isDense = synthesisWords >= 80 || totalQuoteChars >= 300;
+
+    // Type-size tokens. These get tighter for dense cards.
+    const sizes = isDense
+      ? {
+          synopsis: 32,
+          voices: 26,
+          quoteText: 26,
+          quoteAttribution: 15,
+          synthesis: 18,
+          synthesisLineHeight: 1.4,
+          marginBetween: 28,
+        }
+      : {
+          synopsis: 36,
+          voices: 30,
+          quoteText: 32,
+          quoteAttribution: 17,
+          synthesis: 22,
+          synthesisLineHeight: 1.5,
+          marginBetween: 36,
+        };
+
     return new ImageResponse(
       (
         <div
@@ -122,7 +155,7 @@ export async function GET(req: NextRequest) {
             </div>
 
             {/* Synopsis */}
-            <div style={{ display: "flex", flexDirection: "column", marginBottom: 36 }}>
+            <div style={{ display: "flex", flexDirection: "column", marginBottom: sizes.marginBetween }}>
               <span
                 style={{
                   fontFamily: "Lexend",
@@ -139,7 +172,7 @@ export async function GET(req: NextRequest) {
               <span
                 style={{
                   fontFamily: "Fraunces",
-                  fontSize: 36,
+                  fontSize: sizes.synopsis,
                   lineHeight: 1.25,
                   color: "#1a1814",
                   fontWeight: 400,
@@ -150,7 +183,7 @@ export async function GET(req: NextRequest) {
             </div>
 
             {/* Voices */}
-            <div style={{ display: "flex", flexDirection: "column", marginBottom: 36 }}>
+            <div style={{ display: "flex", flexDirection: "column", marginBottom: sizes.marginBetween }}>
               <span
                 style={{
                   fontFamily: "Lexend",
@@ -168,7 +201,7 @@ export async function GET(req: NextRequest) {
                 style={{
                   fontFamily: "Fraunces",
                   fontStyle: "italic",
-                  fontSize: 30,
+                  fontSize: sizes.voices,
                   lineHeight: 1.3,
                   color: "#444441",
                 }}
@@ -193,7 +226,7 @@ export async function GET(req: NextRequest) {
                   style={{
                     fontFamily: "Fraunces",
                     fontStyle: "italic",
-                    fontSize: 32,
+                    fontSize: sizes.quoteText,
                     lineHeight: 1.32,
                     color: "#1a1814",
                     marginBottom: 12,
@@ -204,7 +237,7 @@ export async function GET(req: NextRequest) {
                 <span
                   style={{
                     fontFamily: "Lexend",
-                    fontSize: 17,
+                    fontSize: sizes.quoteAttribution,
                     color: "#888780",
                     fontWeight: 500,
                   }}
@@ -233,8 +266,8 @@ export async function GET(req: NextRequest) {
                 <span
                   style={{
                     fontFamily: "Fraunces",
-                    fontSize: 22,
-                    lineHeight: 1.5,
+                    fontSize: sizes.synthesis,
+                    lineHeight: sizes.synthesisLineHeight,
                     color: "#1a1814",
                     fontWeight: 400,
                   }}
