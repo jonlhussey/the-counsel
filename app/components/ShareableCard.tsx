@@ -62,7 +62,7 @@ export function ShareableCard({ card, reflectionPayload }: Props) {
   async function downloadImage() {
     const params = new URLSearchParams({
       synopsis: card.synopsis,
-      voices: card.voices,
+      voices: Array.isArray(card.voices) ? card.voices.join(", ") : card.voices,
       quoteText: card.pullQuotes[0]?.text ?? "",
       quoteCitation: card.pullQuotes[0]?.attribution ?? "",
       synthesis: card.synthesis ?? "",
@@ -82,7 +82,7 @@ export function ShareableCard({ card, reflectionPayload }: Props) {
       const url = await ensureShareUrl();
       const params = new URLSearchParams({
         synopsis: card.synopsis,
-        voices: card.voices,
+        voices: Array.isArray(card.voices) ? card.voices.join(", ") : card.voices,
         quoteText: card.pullQuotes[0]?.text ?? "",
         quoteCitation: card.pullQuotes[0]?.attribution ?? "",
         synthesis: card.synthesis ?? "",
