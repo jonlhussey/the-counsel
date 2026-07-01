@@ -62,7 +62,7 @@ export function ShareableCard({ card, reflectionPayload }: Props) {
   async function downloadImage() {
     const params = new URLSearchParams({
       synopsis: card.synopsis,
-      voices: Array.isArray(card.voices) ? card.voices.join(", ") : card.voices,
+      voices: Array.isArray(card.voices) ? card.voices.join(" | ") : card.voices,
       quoteText: card.pullQuotes[0]?.text ?? "",
       quoteCitation: card.pullQuotes[0]?.attribution ?? "",
       synthesis: card.synthesis ?? "",
@@ -82,7 +82,7 @@ export function ShareableCard({ card, reflectionPayload }: Props) {
       const url = await ensureShareUrl();
       const params = new URLSearchParams({
         synopsis: card.synopsis,
-        voices: Array.isArray(card.voices) ? card.voices.join(", ") : card.voices,
+        voices: Array.isArray(card.voices) ? card.voices.join(" | ") : card.voices,
         quoteText: card.pullQuotes[0]?.text ?? "",
         quoteCitation: card.pullQuotes[0]?.attribution ?? "",
         synthesis: card.synthesis ?? "",
@@ -139,7 +139,7 @@ export function ShareableCard({ card, reflectionPayload }: Props) {
         <div className="sc-label">Scenario</div>
         <p className="sc-synopsis">{card.synopsis}</p>
         <div className="sc-label">Reflecting</div>
-        <p className="sc-voices">{card.voices}</p>
+        <p className="sc-voices">{Array.isArray(card.voices) ? card.voices.join(" | ") : card.voices}</p>
         {card.pullQuotes?.length > 0 && (
           <div className="sc-quotes">
             {card.pullQuotes.map((q, i) => (
