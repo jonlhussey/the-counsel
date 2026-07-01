@@ -460,36 +460,39 @@ export const CATEGORIES: PromptCategory[] = [
  * Seeded by date so the same 5 show all day; refreshes at midnight.
  * Pure client-side — no backend needed for Path A.
  */
+// Replaces the getDailyPrompts function in dailyPrompts.ts
+// Drop this into the bottom of that file instead.
+
+/**
+ * Select 5 prompts for today — one from each of 5 different categories.
+ * Uses day-of-year as an incrementing counter so:
+ *   - All 5 prompts change every single day
+ *   - No prompt repeats within a ~60 day window
+ *   - Same 5 show all day; refreshes at midnight
+ */
 export function getDailyPrompts(): DailyPrompt[] {
   const today = new Date();
-  const dateKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+  // Day number since a fixed epoch — increments by 1 every calendar day
+  const epoch = new Date(2024, 0, 1).getTime();
+  const dayNumber = Math.floor((today.getTime() - epoch) / (1000 * 60 * 60 * 24));
 
-  // Simple deterministic hash of the date string
-  function hashDate(str: string): number {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) {
-      h = Math.imul(31, h) + str.charCodeAt(i) | 0;
-    }
-    return Math.abs(h);
+  // Rotate which 5 of the 9 categories appear today
+  // Full cycle of all 9 categories repeats every 9 days
+  const categoryOrder = [...CATEGORIES];
+  const catOffset = dayNumber % categoryOrder.length;
+  const todayCategories: PromptCategory[] = [];
+  for (let i = 0; i < 5; i++) {
+    todayCategories.push(categoryOrder[(catOffset + i) % categoryOrder.length]);
   }
 
-  const seed = hashDate(dateKey);
-
-  // Pick 5 categories from the 9, cycling through with date offset
-  const categoryOrder = [...CATEGORIES];
-  // Rotate categories based on seed so different 5 are featured each day
-  const offset = seed % categoryOrder.length;
-  const rotated = [
-    ...categoryOrder.slice(offset),
-    ...categoryOrder.slice(0, offset),
-  ];
-  const todayCategories = rotated.slice(0, 5);
-
-  // From each category, pick one prompt deterministically
+  // From each category, pick one prompt using dayNumber as offset
+  // This advances through the pool so prompts don't repeat for many weeks
   const result: DailyPrompt[] = [];
   todayCategories.forEach((cat, idx) => {
     const pool = DAILY_PROMPTS.filter((p) => p.category === cat);
-    const pick = pool[(seed * (idx + 7)) % pool.length];
+    // Each category uses a different stride to avoid clustering
+    const stride = dayNumber + idx * 37;
+    const pick = pool[stride % pool.length];
     result.push(pick);
   });
 
