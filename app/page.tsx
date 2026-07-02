@@ -98,7 +98,11 @@ export default function HomePage() {
   const [mode, setMode] = useState<Mode>("single");
   const [picker, setPicker] = useState<Picker>("user");
   const [scenario, setScenario] = useState("");
-  const [placeholder] = useState(getRandomPlaceholder);
+  const [placeholder, setPlaceholder] = useState("");
+
+  useEffect(() => {
+    setPlaceholder(getRandomPlaceholder());
+  }, []);
   const [thinkerId, setThinkerId] = useState<string | null>(null);
   const [councilThinkerIds, setCouncilThinkerIds] = useState<string[]>([]);
   const [showBrowser, setShowBrowser] = useState(false);
